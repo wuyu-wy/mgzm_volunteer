@@ -15,4 +15,55 @@
 
 
     </resultMap>
+    
+    <insert id="insert" parameterType="taskVolunteerEntity">
+        insert into mgzm.task_volunteer (volunteer_id, child_id, task_id, approval_start_time,
+                                         approval_finish_time, approval_end_time, is_completed_approval, approval_comments)
+        VALUES (#{volunteerId},#{childId},#{taskId},#{approvalStartTime},#{approvalFinishTime},#{approvalEndTime}
+        ,#{isCompletedApproval},#{approvalComments})
+    </insert>
+
+    <!--修改任务-志愿者-->
+    <update id="update" parameterType="taskVolunteerEntity">
+        update mgzm.task_volunteer
+        <set>
+            <if test="approvalStartTime != null">
+                approval_start_time = #{approvalStartTime},
+            </if>
+            <if test="approvalFinishTime != null">
+                approval_finish_time = #{approvalFinishTime},
+            </if>
+            <if test="approvalEndTime != null">
+                approval_end_time = #{approvalEndTime},
+            </if>
+            <if test="isCompletedApproval != null">
+                is_completed_approval = #{isCompletedApproval},
+            </if>
+            <if test="approvalComments != null">
+                approval_comments = #{approvalComments},
+            </if>
+        </set>
+        where volunteer_Id = #{volunteerId} and child_id = #{childId} and task_id = #{taskId}
+    </update>
+
+    <select id="selectAll" parameterType="taskVolunteerEntity" resultType="arraylist" resultMap="TaskVolunteerMap">
+        select * from mgzm.task_volunteer
+        where volunteer_id = #{volunteerId}
+<!--        <where>-->
+<!--            <if test="volunteerId != null and volunteerId != ''">-->
+<!--                and volunteer_id = #{volunteerId}-->
+<!--            </if>-->
+<!--            <if test="childId != null and childId != ''">-->
+<!--                and child_id = #{childId}-->
+<!--            </if>-->
+<!--            <if test="taskId != null and taskId != ''">-->
+<!--                and task_id = #{taskId}-->
+<!--            </if>-->
+<!--        </where>-->
+    </select>
+
+
+
+
+    
 </mapper>

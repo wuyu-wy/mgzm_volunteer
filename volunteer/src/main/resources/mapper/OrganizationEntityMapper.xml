@@ -35,7 +35,8 @@
 
     <!--分页查询-->
     <select id="selectByLimit" resultType="com.blbd.volunteer.dao.entity.OrganizationEntity">
-
+        select * from organization
+            limit #{curPage},#{pageSize}
     </select>
 
 

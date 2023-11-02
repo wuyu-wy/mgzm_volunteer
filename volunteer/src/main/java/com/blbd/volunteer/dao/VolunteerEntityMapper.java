@@ -21,7 +21,4 @@ public interface VolunteerEntityMapper {
 
     int updateVolunteer(VolunteerEntity volunteerEntity);
 
-
-
-
 }

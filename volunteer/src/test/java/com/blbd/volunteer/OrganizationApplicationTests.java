@@ -24,6 +24,7 @@ class OrganizationApplicationTests {
         org.setOrgId("1");
         org.setOrgName("2");
         int rowsInserted = organizationEntityMapper.update(org);
+        System.out.println(rowsInserted);
         assert rowsInserted == 1;
     }
 

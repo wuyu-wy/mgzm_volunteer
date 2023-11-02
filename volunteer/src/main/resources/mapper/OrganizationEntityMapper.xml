@@ -29,7 +29,8 @@
             org_id, org_name, org_introduction, org_number,
             org_address, org_volunteer_id, org_pass_if
         from organization
-        where org_name = #{orgName,jdbcType=VARCHAR}
+        <!--        where org_name = #{orgName,jdbcType=VARCHAR}-->
+
     </select>
 
 

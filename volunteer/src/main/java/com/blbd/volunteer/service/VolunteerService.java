@@ -13,7 +13,7 @@ public interface VolunteerService {
 
 
     //志愿者登录
-    int loginVolunteer(VolunteerEntity volunteerEntity);
+    List<VolunteerEntity> loginVolunteer(VolunteerEntity volunteerEntity);
 
     //志愿者注册
     int registerVolunteer(VolunteerEntity volunteerEntity);

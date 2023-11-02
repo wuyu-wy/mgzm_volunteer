@@ -20,6 +20,8 @@ public interface OrganizationEntityMapper {
     //修改组织信息
     int update(OrganizationEntity organizationEntity);
 
+    //组织列表
+    List<OrganizationEntity> selectByOrganizationName(OrganizationEntity organizationEntity);
 
 
 }

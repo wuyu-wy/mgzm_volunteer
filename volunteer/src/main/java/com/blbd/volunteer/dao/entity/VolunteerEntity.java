@@ -1,8 +1,5 @@
 package com.blbd.volunteer.dao.entity;
 
-import lombok.Data;
-
-@Data
 public class VolunteerEntity {
     private String volId;
     private String volUsername;
@@ -84,5 +81,20 @@ public class VolunteerEntity {
 
     public void setVolTel(String volTel) {
         this.volTel = volTel;
+    }
+
+    @Override
+    public String toString() {
+        return "VolunteerEntity{" +
+                "volId='" + volId + '\'' +
+                ", volUsername='" + volUsername + '\'' +
+                ", volPassword='" + volPassword + '\'' +
+                ", volName='" + volName + '\'' +
+                ", volLocate='" + volLocate + '\'' +
+                ", volOrganization='" + volOrganization + '\'' +
+                ", volDuty=" + volDuty +
+                ", volCorrectedTasks=" + volCorrectedTasks +
+                ", volTel='" + volTel + '\'' +
+                '}';
     }
 }

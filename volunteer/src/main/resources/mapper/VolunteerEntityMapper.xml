@@ -9,11 +9,12 @@
         <result column="vol_name" jdbcType="VARCHAR" property="volName"/>
         <result column="vol_locate" jdbcType="VARCHAR" property="volLocate"/>
         <result column="vol_organization" jdbcType="VARCHAR" property="volOrganization"/>
-        <result column="vol_duty" jdbcType="VARCHAR" property="volDuty"/>
-        <result column="vol_corrected_tasks" jdbcType="VARCHAR" property="volCorrectedTasks"/>
+        <result column="vol_duty" jdbcType="INTEGER" property="volDuty"/>
+        <result column="vol_corrected_tasks" jdbcType="INTEGER" property="volCorrectedTasks"/>
         <result column="vol_tel" jdbcType="VARCHAR" property="volTel"/>
 
     </resultMap>
+
 
     <insert id="insert" parameterType="com.blbd.volunteer.dao.entity.VolunteerEntity">
 
@@ -23,8 +24,48 @@
         vol_tel)
         values (#{volId,jdbcType=VARCHAR}, #{volUsername,jdbcType=VARCHAR}, #{volPassword,jdbcType=VARCHAR},
         #{volName,jdbcType=VARCHAR}, #{volLocate,jdbcType=VARCHAR},
-        #{volOrganization,jdbcType=VARCHAR}, #{volDuty,jdbcType=VARCHAR},
-        #{volCorrectedTasks,jdbcType=VARCHAR}, #{volTel,jdbcType=VARCHAR})
+        #{volOrganization,jdbcType=VARCHAR}, #{volDuty,jdbcType=INTEGER},
+        #{volCorrectedTasks,jdbcType=INTEGER}, #{volTel,jdbcType=VARCHAR})
     </insert>
 
-    </mapper>
+
+ <!-- 查询志愿者信息，测试成功 -->
+    <select id="selectVolunteerInfo"  resultType="com.blbd.volunteer.dao.entity.VolunteerEntity">
+        select vol_id, vol_username, vol_password,
+               vol_name, vol_locate,
+               vol_organization, vol_duty, vol_corrected_tasks,
+               vol_tel
+        from volunteer
+        where vol_username = #{volUsername,jdbcType=VARCHAR} and `vol_password` = #{volPassword,jdbcType=VARCHAR}
+    </select>
+
+    <!-- 查询username是否已有 -->
+    <select id="selectVolunteerUsername"  resultType="com.blbd.volunteer.dao.entity.VolunteerEntity">
+        select vol_id, vol_username, vol_password,
+               vol_name, vol_locate,
+               vol_organization, vol_duty, vol_corrected_tasks,
+               vol_tel
+        from volunteer
+        where vol_username = #{volUsername,jdbcType=VARCHAR}
+    </select>
+
+
+    <!-- 修改志愿者信息，测试成功-->
+    <update id="updateVolunteer" parameterType="com.blbd.volunteer.dao.entity.VolunteerEntity">
+
+        update volunteer
+        set vol_username = #{volUsername,jdbcType=VARCHAR},
+            vol_password = #{volPassword,jdbcType=VARCHAR},
+            vol_name = #{volName,jdbcType=VARCHAR},
+            vol_locate = #{volLocate,jdbcType=VARCHAR},
+            vol_organization = #{volOrganization,jdbcType=CHAR},
+            vol_duty = #{volDuty,jdbcType=INTEGER},
+            vol_corrected_tasks = #{volCorrectedTasks,jdbcType=INTEGER},
+            vol_tel = #{volTel,jdbcType=VARCHAR}
+        where vol_username = #{volUsername,jdbcType=VARCHAR}
+    </update>
+
+
+
+
+</mapper>

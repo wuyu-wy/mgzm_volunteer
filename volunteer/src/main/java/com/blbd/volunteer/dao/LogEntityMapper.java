@@ -24,5 +24,7 @@ public interface LogEntityMapper {
 
     //修改日志
     int update(LogEntity logEntity);
+
+
 }
 

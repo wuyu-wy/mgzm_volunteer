@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
+
+
 @SpringBootTest(classes = VolunteerApplication.class)
 @RunWith(SpringRunner.class)
 class VolunteerApplicationTests {
@@ -20,14 +23,45 @@ class VolunteerApplicationTests {
     @Test
     public void testInsertVolunteer() {
         VolunteerEntity volunteerEntity = new VolunteerEntity();
-        volunteerEntity.setVolName("wuhao11");
+        volunteerEntity.setVolUsername("wuhao");
         volunteerEntity.setVolPassword("123456");
-        volunteerEntity.setVolId("99");
+        volunteerEntity.setVolDuty(1);
+        volunteerEntity.setVolId("1s2");
 
-        int rowsInserted = volunteerEntityMapper.insert(volunteerEntity);
+        List<VolunteerEntity> ifhave = volunteerEntityMapper.selectVolunteerUsername(volunteerEntity);
 
-        assert rowsInserted == 1;
+        if(ifhave.size() == 0) {
 
+            int rowsInserted = volunteerEntityMapper.insert(volunteerEntity);
+
+            assert rowsInserted == 1;
+        }else{
+            System.out.println("此用户名已存在");
+        }
+
+    }
+
+    //查询志愿者信息，测试成功
+    @Test
+    public void testSelectVolunteer(){
+        VolunteerEntity volunteerEntity = new VolunteerEntity();
+        volunteerEntity.setVolUsername("wuhao");
+        volunteerEntity.setVolPassword("123456");
+        List<VolunteerEntity> rowsSelected = volunteerEntityMapper.selectVolunteerInfo(volunteerEntity);
+        System.out.println(rowsSelected);
+
+    }
+
+    //修改志愿者信息测试
+    @Test
+    public void testUpdateVolunteer(){
+        VolunteerEntity volunteerEntity = new VolunteerEntity();
+        volunteerEntity.setVolUsername("mm2mm");
+        volunteerEntity.setVolPassword("521321322");
+
+        int rowsSelected = volunteerEntityMapper.updateVolunteer(volunteerEntity);
+
+        System.out.println(rowsSelected);
     }
 
     }

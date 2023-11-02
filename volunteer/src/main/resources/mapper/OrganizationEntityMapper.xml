@@ -18,9 +18,21 @@
         insert into organization (org_id, org_name,org_introduction,
                                   org_number, org_address,org_volunteer_id,org_pass_if)
         values (#{orgId,jdbcType=VARCHAR}, #{orgName,jdbcType=VARCHAR}, #{orgIntroduction,jdbcType=VARCHAR},
-                #{orgNumber,jdbcType=VARCHAR}, #{orgAddress,jdbcType=VARCHAR},#{orgVolunteerId,jdbcType=VARCHAR},
+                #{orgNumber,jdbcType=INTEGER}, #{orgAddress,jdbcType=VARCHAR},#{orgVolunteerId,jdbcType=VARCHAR},
                 #{orgPassIf,jdbcType=VARCHAR})
     </insert>
+
+
+    <!--查找组织-->
+    <select id="selectByOrganizationName" parameterType="organizationEntity" resultType="com.blbd.volunteer.dao.entity.OrganizationEntity">
+        select
+            org_id, org_name, org_introduction, org_number,
+            org_address, org_volunteer_id, org_pass_if
+        from organization
+        <!--        where org_name = #{orgName,jdbcType=VARCHAR}-->
+
+    </select>
+
 
     <!--修改组织信息-->
     <update id="update" parameterType="organizationEntity">
@@ -47,6 +59,8 @@
         </set>
         where org_id = #{orgId,jdbcType=VARCHAR}
     </update>
+
+
 
 
 

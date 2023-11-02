@@ -17,6 +17,7 @@ public interface OrganizationEntityMapper {
     //新增组织
     int insert(OrganizationEntity organizationEntity);
 
-
+    //修改组织信息
+    int update(OrganizationEntity organizationEntity);
 
 }

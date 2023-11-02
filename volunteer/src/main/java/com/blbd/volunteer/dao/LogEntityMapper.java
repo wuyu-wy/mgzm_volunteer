@@ -20,7 +20,7 @@ public interface LogEntityMapper {
     int delete(LogEntity logEntity);
 
     //查找所有
-    <List>LogEntity selectAll(LogEntity logEntity);
+    List<LogEntity> selectAll(LogEntity logEntity);
 
 
 }

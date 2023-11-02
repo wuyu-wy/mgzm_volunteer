@@ -22,5 +22,32 @@
                 #{orgPassIf,jdbcType=VARCHAR})
     </insert>
 
+    <!--修改组织信息-->
+    <update id="update" parameterType="organizationEntity">
+        update organization
+        <set>
+            <if test="orgName != null">
+                org_name = #{orgName,jdbcType=VARCHAR},
+            </if>
+            <if test="orgIntroduction != null">
+                org_introduction = #{orgIntroduction,jdbcType=VARCHAR},
+            </if>
+            <if test="orgNumber != null">
+                org_number = #{orgNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="orgAddress != null">
+                org_address = #{orgAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="orgVolunteerId != null">
+                org_volunteer_id = #{orgVolunteerId,jdbcType=VARCHAR},
+            </if>
+            <if test="orgPassIf != null">
+                org_pass_if = #{orgPassIf,jdbcType=VARCHAR}
+            </if>
+        </set>
+        where org_id = #{orgId,jdbcType=VARCHAR}
+    </update>
+
+
 
 </mapper>

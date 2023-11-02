@@ -18,4 +18,5 @@ public interface OrganizationEntityMapper {
     int insert(OrganizationEntity organizationEntity);
 
 
+
 }

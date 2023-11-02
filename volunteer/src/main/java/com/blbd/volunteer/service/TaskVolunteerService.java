@@ -1,4 +1,4 @@
 package com.blbd.volunteer.service;
 
-public class TaskVolunteerService {
+public interface TaskVolunteerService {
 }

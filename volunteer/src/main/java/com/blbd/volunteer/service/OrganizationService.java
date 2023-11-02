@@ -8,7 +8,6 @@ import java.util.List;
 
 public interface OrganizationService {
 
-
     //新增组织
     int insertOrg(OrganizationEntity organizationEntity);
 
@@ -17,4 +16,5 @@ public interface OrganizationService {
 
     //查找组织列表
     List<OrganizationEntity> selectByVolunteerId(OrganizationEntity organizationEntity);
+
 }

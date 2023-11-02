@@ -44,8 +44,15 @@
     </delete>
 
     <!--查找所有-->
-    <select id="selectAll" resultType="com.blbd.volunteer.dao.entity.LogEntity">
+    <select id="selectAll" resultType="com.blbd.volunteer.dao.entity.LogEntity" resultMap="LogMap">
         select * from log where log_volunteer_id = #{logVolunteerId,jdbcType=VARCHAR}
+    </select>
+
+    <!--分页查询-->
+    <select id="selectByLimit" resultType="com.blbd.volunteer.dao.entity.LogEntity">
+        select * from log
+        where log_volunteer_id = #{logVolunteerId,jdbcType=VARCHAR}
+        limit #{curPage},#{pageSize}
     </select>
 
 

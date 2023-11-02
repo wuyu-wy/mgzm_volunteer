@@ -20,4 +20,6 @@ public interface OrganizationEntityMapper {
     //修改组织信息
     int update(OrganizationEntity organizationEntity);
 
+
+
 }

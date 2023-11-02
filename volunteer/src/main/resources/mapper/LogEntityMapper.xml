@@ -18,6 +18,26 @@
                              #{logVolunteerId,jdbcType=VARCHAR}, #{logChildId,jdbcType=VARCHAR})
     </insert>
 
+    <!--修改日志-->
+    <update id="update" parameterType="logEntity">
+        update log
+        <set>
+            <if test="logDate != null">
+                log_date = #{logDate,jdbcType=DATE},
+            </if>
+            <if test="logContent != null">
+                log_content = #{logContent,jdbcType=VARCHAR},
+            </if>
+            <if test="logVolunteerId != null">
+                log_volunteer_id = #{logVolunteerId,jdbcType=VARCHAR},
+            </if>
+            <if test="logChildId != null">
+                log_child_id = #{logChildId,jdbcType=VARCHAR}
+            </if>
+        </set>
+        where log_id = #{logId,jdbcType=VARCHAR}
+    </update>
+
     <!--删除日志-->
     <delete id="delete">
         delete from log where log.log_id = #{log,jdbcType=VARCHAR}

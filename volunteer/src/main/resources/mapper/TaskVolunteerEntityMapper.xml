@@ -48,18 +48,17 @@
 
     <select id="selectAll" parameterType="taskVolunteerEntity" resultType="arraylist" resultMap="TaskVolunteerMap">
         select * from mgzm.task_volunteer
-        where volunteer_id = #{volunteerId}
-<!--        <where>-->
-<!--            <if test="volunteerId != null and volunteerId != ''">-->
-<!--                and volunteer_id = #{volunteerId}-->
-<!--            </if>-->
-<!--            <if test="childId != null and childId != ''">-->
-<!--                and child_id = #{childId}-->
-<!--            </if>-->
-<!--            <if test="taskId != null and taskId != ''">-->
-<!--                and task_id = #{taskId}-->
-<!--            </if>-->
-<!--        </where>-->
+        where 1=1
+            <if test="volunteerId != null and volunteerId != ''">
+                and volunteer_id = #{volunteerId}
+            </if>
+            <if test="childId != null and childId != ''">
+                and child_id = #{childId}
+            </if>
+            <if test="taskId != null and taskId != ''">
+                and task_id = #{taskId}
+            </if>
+
     </select>
 
 

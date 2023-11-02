@@ -9,5 +9,24 @@
         <result column="log_volunteer_id" jdbcType="VARCHAR" property="logVolunteerId"/>
         <result column="log_child_id" jdbcType="VARCHAR" property="logChildId"/>
 
+        <!--新增日志-->
     </resultMap>
-    </mapper>
+    <insert id="insert" parameterType="logEntity">
+        insert into log (log_id, log_date,log_content,
+                         log_volunteer_id, log_child_id)
+        values (#{logId,jdbcType=VARCHAR}, #{logDate,jdbcType=DATE}, #{logContent,jdbcType=VARCHAR},
+                             #{logVolunteerId,jdbcType=VARCHAR}, #{logChildId,jdbcType=VARCHAR})
+    </insert>
+
+    <!--删除日志-->
+    <delete id="delete">
+        delete from log where log.log_id = #{log,jdbcType=VARCHAR}
+    </delete>
+
+    <!--查找所有-->
+    <select id="selectAll" resultType="com.blbd.volunteer.dao.entity.LogEntity">
+        select * from log where log_volunteer_id = #{logVolunteerId,jdbcType=VARCHAR}
+    </select>
+
+
+</mapper>

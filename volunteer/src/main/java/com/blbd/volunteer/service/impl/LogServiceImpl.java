@@ -1,4 +1,8 @@
 package com.blbd.volunteer.service.impl;
 
-public class LogServiceImpl {
+import com.blbd.volunteer.service.LogService;
+import org.springframework.stereotype.Service;
+
+@Service
+public class LogServiceImpl implements LogService{
 }

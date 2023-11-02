@@ -22,6 +22,6 @@ public interface OrganizationEntityMapper {
 
     //组织列表
     List<OrganizationEntity> selectByOrganizationName(OrganizationEntity organizationEntity);
-
-
+    //分页查询
+    List<OrganizationEntity> selectByLimit(Integer curPage,Integer pageSize,OrganizationEntity organizationEntity);
 }

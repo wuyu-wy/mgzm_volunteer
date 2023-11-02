@@ -44,4 +44,10 @@ public class LogServiceImpl implements LogService{
             return 0;
         }
     }
+
+    public List<LogEntity> selectByLimit(Integer curPage, Integer pageSize, LogEntity logEntity) {
+        List<LogEntity> logEntityList = new ArrayList<LogEntity>();
+        logEntityList = logEntityMapper.selectByLimit(curPage,pageSize,logEntity);
+        return logEntityList;
+    }
 }

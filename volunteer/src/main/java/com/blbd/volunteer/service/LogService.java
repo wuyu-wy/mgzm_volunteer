@@ -17,4 +17,7 @@ public interface LogService {
 
     //修改日志
     int updateByLogId(LogEntity logEntity);
+
+    //分页查询
+    List<LogEntity> selectByLimit(Integer curPage,Integer pageSize,LogEntity logEntity);
 }

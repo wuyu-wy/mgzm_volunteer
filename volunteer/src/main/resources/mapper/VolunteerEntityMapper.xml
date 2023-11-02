@@ -15,7 +15,7 @@
 
     </resultMap>
 
-
+    <!-- 增加志愿者信息，测试成功 -->
     <insert id="insert" parameterType="com.blbd.volunteer.dao.entity.VolunteerEntity">
 
         insert into volunteer (vol_id, vol_username,vol_password,
@@ -29,18 +29,18 @@
     </insert>
 
 
- <!-- 查询志愿者信息，测试成功 -->
-    <select id="selectVolunteerInfo"  resultType="com.blbd.volunteer.dao.entity.VolunteerEntity">
-        select vol_id, vol_username, vol_password,
-               vol_name, vol_locate,
-               vol_organization, vol_duty, vol_corrected_tasks,
-               vol_tel
+
+
+    <!-- 查询志愿者信息，测试成功 -->
+    <select id="selectVolunteerInfo"  parameterType="VolunteerEntity" resultType="arraylist" resultMap="VolunteerMap" >
+        select vol_id, vol_username, vol_password, vol_name, vol_locate,
+               vol_organization, vol_duty, vol_corrected_tasks, vol_tel
         from volunteer
-        where vol_username = #{volUsername,jdbcType=VARCHAR} and `vol_password` = #{volPassword,jdbcType=VARCHAR}
+        where vol_username = #{volUsername,jdbcType=VARCHAR} and vol_password = #{volPassword,jdbcType=VARCHAR}
     </select>
 
     <!-- 查询username是否已有 -->
-    <select id="selectVolunteerUsername"  resultType="com.blbd.volunteer.dao.entity.VolunteerEntity">
+    <select id="selectVolunteerUsername"  parameterType="VolunteerEntity" resultType="arraylist" resultMap="VolunteerMap">
         select vol_id, vol_username, vol_password,
                vol_name, vol_locate,
                vol_organization, vol_duty, vol_corrected_tasks,
@@ -52,18 +52,20 @@
 
     <!-- 修改志愿者信息，测试成功-->
     <update id="updateVolunteer" parameterType="com.blbd.volunteer.dao.entity.VolunteerEntity">
-
         update volunteer
-        set vol_username = #{volUsername,jdbcType=VARCHAR},
-            vol_password = #{volPassword,jdbcType=VARCHAR},
-            vol_name = #{volName,jdbcType=VARCHAR},
-            vol_locate = #{volLocate,jdbcType=VARCHAR},
-            vol_organization = #{volOrganization,jdbcType=CHAR},
-            vol_duty = #{volDuty,jdbcType=INTEGER},
-            vol_corrected_tasks = #{volCorrectedTasks,jdbcType=INTEGER},
-            vol_tel = #{volTel,jdbcType=VARCHAR}
+        <set>
+            <if test="volUsername != null">vol_username = #{volUsername,jdbcType=VARCHAR},</if>
+            <if test="volPassword != null">vol_password = #{volPassword,jdbcType=VARCHAR},</if>
+            <if test="volName != null">vol_name = #{volName,jdbcType=VARCHAR},</if>
+            <if test="volLocate != null">vol_locate = #{volLocate,jdbcType=VARCHAR},</if>
+            <if test="volOrganization != null">vol_organization = #{volOrganization,jdbcType=CHAR},</if>
+            <if test="volDuty != null">vol_duty = #{volDuty,jdbcType=INTEGER},</if>
+            <if test="volCorrectedTasks != null">vol_corrected_tasks = #{volCorrectedTasks,jdbcType=INTEGER},</if>
+            <if test="volTel != null">vol_tel = #{volTel,jdbcType=VARCHAR}</if>
+        </set>
         where vol_username = #{volUsername,jdbcType=VARCHAR}
     </update>
+
 
 
 

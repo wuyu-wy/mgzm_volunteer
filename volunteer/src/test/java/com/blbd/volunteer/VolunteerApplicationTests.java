@@ -57,7 +57,7 @@ class VolunteerApplicationTests {
     public void testUpdateVolunteer(){
         VolunteerEntity volunteerEntity = new VolunteerEntity();
         volunteerEntity.setVolUsername("mm2mm");
-        volunteerEntity.setVolPassword("521321322");
+        volunteerEntity.setVolPassword("122234");
 
         int rowsSelected = volunteerEntityMapper.updateVolunteer(volunteerEntity);
 

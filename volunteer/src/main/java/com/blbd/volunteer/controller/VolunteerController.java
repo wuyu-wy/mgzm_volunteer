@@ -29,7 +29,7 @@ public class VolunteerController {
 
     //志愿者登录账号
     @PostMapping(value = "/login", headers = "Accept=application/json")
-    public List<VolunteerEntity> loginVolunteer(@RequestBody String username, String password){
+    public List<VolunteerEntity> loginVolunteer(@RequestParam String username, String password){
 
         //根据给的账号密码，给出其list
         return volunteerService.loginVolunteer(username, password);
@@ -46,7 +46,7 @@ public class VolunteerController {
 
 
     @PostMapping(value = "/update", headers = "Accept=application/json")
-    public int updateVolunteer(@RequestBody VolunteerEntity volunteerEntity){
+    public int updateVolunteer(VolunteerEntity volunteerEntity){
 
         //根据给出的新的list根据用户名更新
         //注：用户名不可修改

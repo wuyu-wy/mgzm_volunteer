@@ -3,6 +3,7 @@ package com.blbd.volunteer.service.impl;
 import com.blbd.volunteer.dao.VolunteerEntityMapper;
 import com.blbd.volunteer.dao.entity.VolunteerEntity;
 import com.blbd.volunteer.service.VolunteerService;
+import com.blbd.volunteer.utils.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,7 @@ public class VolunteerServiceImpl implements VolunteerService {
         VolunteerEntity volunteerEntity = new VolunteerEntity();
         volunteerEntity.setVolUsername(username);
         volunteerEntity.setVolPassword(password);
+        volunteerEntity.setVolId(UUIDUtil.getOneUUID());
 
         List<VolunteerEntity> ifHave = volunteerEntityMapper.selectVolunteerUsername(volunteerEntity);
 

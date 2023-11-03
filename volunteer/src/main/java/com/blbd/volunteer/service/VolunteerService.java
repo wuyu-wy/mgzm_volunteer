@@ -13,13 +13,13 @@ public interface VolunteerService {
 
 
     //志愿者登录
-    List<VolunteerEntity> loginVolunteer(VolunteerEntity volunteerEntity);
+    List<VolunteerEntity> loginVolunteer(String username, String password);
 
     //志愿者注册
-    int registerVolunteer(VolunteerEntity volunteerEntity);
+    int registerVolunteer(String username,String password);
 
     //志愿者查询
-    List<VolunteerEntity> queryVolunteer(VolunteerEntity volunteerentity);
+    List<VolunteerEntity> queryVolunteer(String username);
 
     //志愿者修改
     int updateVolunteer(VolunteerEntity volunteerEntity);

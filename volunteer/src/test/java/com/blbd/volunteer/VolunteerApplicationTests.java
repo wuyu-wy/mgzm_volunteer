@@ -26,7 +26,7 @@ class VolunteerApplicationTests {
         volunteerEntity.setVolUsername("wuhao");
         volunteerEntity.setVolPassword("123456");
         volunteerEntity.setVolDuty(1);
-        volunteerEntity.setVolId("1s2");
+        volunteerEntity.setVolId("12");
 
         List<VolunteerEntity> ifhave = volunteerEntityMapper.selectVolunteerUsername(volunteerEntity);
 

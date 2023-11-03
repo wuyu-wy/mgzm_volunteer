@@ -16,7 +16,10 @@ public class VolunteerServiceImpl implements VolunteerService {
 
     //志愿者登录
     @Override
-    public List<VolunteerEntity> loginVolunteer(VolunteerEntity volunteerEntity) {
+    public List<VolunteerEntity> loginVolunteer(String username, String password) {
+        VolunteerEntity volunteerEntity = new VolunteerEntity();
+        volunteerEntity.setVolUsername(username);
+        volunteerEntity.setVolPassword(password);
 
         List<VolunteerEntity> ifLogin = volunteerEntityMapper.selectVolunteerInfo(volunteerEntity);
 
@@ -27,28 +30,35 @@ public class VolunteerServiceImpl implements VolunteerService {
 
     //志愿者注册
     @Override
-    public int registerVolunteer(VolunteerEntity volunteerEntity) {
+    public int registerVolunteer(String username, String password) {
+
+        VolunteerEntity volunteerEntity = new VolunteerEntity();
+        volunteerEntity.setVolUsername(username);
+        volunteerEntity.setVolPassword(password);
+
         List<VolunteerEntity> ifHave = volunteerEntityMapper.selectVolunteerUsername(volunteerEntity);
 
         if(ifHave.size() == 0) {
             volunteerEntityMapper.insert(volunteerEntity);
+            return 1;
         }else{
             System.out.println("此用户名已存在");
+            return 0;
         }
-
-        return ifHave.size();
-
     }
 
     //志愿者信息查询
     @Override
-    public List<VolunteerEntity> queryVolunteer(VolunteerEntity volunteerEntity) {
+    public List<VolunteerEntity> queryVolunteer(String username) {
 
-        List<VolunteerEntity> queryVolunteer = volunteerEntityMapper.selectVolunteerInfo(volunteerEntity);
+        VolunteerEntity volunteerEntity = new VolunteerEntity();
+        volunteerEntity.setVolUsername(username);
 
-        System.out.println(queryVolunteer);
+        List<VolunteerEntity> queryVolunteerInfo = volunteerEntityMapper.selectVolunteerInfo(volunteerEntity);
 
-        return queryVolunteer;
+        System.out.println(queryVolunteerInfo);
+
+        return queryVolunteerInfo;
     }
 
     //志愿者信息更新

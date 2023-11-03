@@ -3,6 +3,7 @@ package com.blbd.volunteer.service.impl;
 import com.blbd.volunteer.dao.LogEntityMapper;
 import com.blbd.volunteer.dao.entity.LogEntity;
 import com.blbd.volunteer.service.LogService;
+import com.blbd.volunteer.utils.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,27 +23,18 @@ public class LogServiceImpl implements LogService{
     }
 
     public int insertLog(LogEntity logEntity) {
-        if(logEntityMapper.insert(logEntity) == 1){
-            return 1;
-        }else{
-            return 0;
-        }
+
+        logEntity.setLogId(UUIDUtil.getOneUUID());
+        return logEntityMapper.insert(logEntity);
+
     }
 
     public int deleteByLogId(LogEntity logEntity) {
-        if(logEntityMapper.delete(logEntity) == 1){
-            return 1;
-        }else{
-            return 0;
-        }
+        return logEntityMapper.delete(logEntity);
     }
 
     public int updateByLogId(LogEntity logEntity) {
-        if(logEntityMapper.update(logEntity) == 1){
-            return 1;
-        }else{
-            return 0;
-        }
+        return logEntityMapper.update(logEntity);
     }
 
     public List<LogEntity> selectByLimit(Integer curPage, Integer pageSize, LogEntity logEntity) {

@@ -69,7 +69,6 @@ public class VolunteerServiceImpl implements VolunteerService {
 
         int ans = volunteerEntityMapper.updateVolunteer(volunteerEntity);
 
-        System.out.println(ans);
         return ans;
     }
 }

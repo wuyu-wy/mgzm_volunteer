@@ -1,5 +1,6 @@
 package com.blbd.volunteer.utils;
 
+import java.util.Date;
 import java.util.UUID;
 
 public class UUIDUtil {
@@ -28,4 +29,10 @@ public class UUIDUtil {
         }
         return ss;
     }
+
+
+    //时间戳函数
+        public static Date getCurrentTime() {
+            return new Date();
+        }
 }

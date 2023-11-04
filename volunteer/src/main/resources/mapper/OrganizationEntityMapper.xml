@@ -22,6 +22,18 @@
                 #{orgPassIf,jdbcType=VARCHAR})
     </insert>
 
+    <!--模糊分页查询，用于搜索组织-->
+    <select id="selectByOrgName" parameterType="organizationEntity" resultType="com.blbd.volunteer.dao.entity.OrganizationEntity" resultMap="OrganizationMap">
+        select
+            org_id, org_name, org_introduction, org_number,
+            org_address, org_volunteer_id, org_pass_if
+        from organization
+        where org_name like CONCAT('%', #{orgName, jdbcType=VARCHAR}, '%') -- 使用 LIKE 进行模糊匹配
+--             limit #{pageSize} offset #{offset} -- 添加分页参数
+               limit #{curPage},#{pageSize}
+    </select>
+
+
 
     <!--查找组织-->
     <select id="selectByOrganizationName" parameterType="organizationEntity" resultType="com.blbd.volunteer.dao.entity.OrganizationEntity" resultMap="OrganizationMap">
@@ -29,7 +41,7 @@
             org_id, org_name, org_introduction, org_number,
             org_address, org_volunteer_id, org_pass_if
         from organization
-        <!--        where org_name = #{orgName,jdbcType=VARCHAR}-->
+        where org_name = #{orgName,jdbcType=VARCHAR}
 
     </select>
 
@@ -66,8 +78,16 @@
         where org_id = #{orgId,jdbcType=VARCHAR}
     </update>
 
-
-
+    <!--修改组织信息-->
+    <update id="updateByOrgName" parameterType="organizationEntity">
+        update organization
+        <set>
+            <if test="orgNumber != null">
+                org_number = #{orgNumber,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where org_name = #{orgName,jdbcType=VARCHAR}
+    </update>
 
 
 </mapper>

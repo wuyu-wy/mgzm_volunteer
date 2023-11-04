@@ -1,11 +1,17 @@
 package com.blbd.volunteer.service.impl;
 
+import com.blbd.volunteer.dao.OrganizationEntityMapper;
 import com.blbd.volunteer.dao.VolunteerEntityMapper;
+import com.blbd.volunteer.dao.entity.LogEntity;
+import com.blbd.volunteer.dao.entity.OrganizationEntity;
 import com.blbd.volunteer.dao.entity.VolunteerEntity;
+import com.blbd.volunteer.service.OrganizationService;
 import com.blbd.volunteer.service.VolunteerService;
+import com.blbd.volunteer.utils.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -13,6 +19,7 @@ public class VolunteerServiceImpl implements VolunteerService {
 
     @Autowired
     private VolunteerEntityMapper volunteerEntityMapper;
+    private OrganizationService organizationService;
 
     //志愿者登录
     @Override
@@ -25,7 +32,7 @@ public class VolunteerServiceImpl implements VolunteerService {
 
         System.out.println(ifLogin);
 
-       return ifLogin;
+        return ifLogin;
     }
 
     //志愿者注册
@@ -35,6 +42,7 @@ public class VolunteerServiceImpl implements VolunteerService {
         VolunteerEntity volunteerEntity = new VolunteerEntity();
         volunteerEntity.setVolUsername(username);
         volunteerEntity.setVolPassword(password);
+        volunteerEntity.setVolId(UUIDUtil.getOneUUID());
 
         List<VolunteerEntity> ifHave = volunteerEntityMapper.selectVolunteerUsername(volunteerEntity);
 
@@ -64,8 +72,19 @@ public class VolunteerServiceImpl implements VolunteerService {
     //志愿者信息更新
     @Override
     public int updateVolunteer(VolunteerEntity volunteerEntity) {
+        return  volunteerEntityMapper.updateVolunteer(volunteerEntity);
+    }
 
-        int ans = volunteerEntityMapper.updateVolunteer(volunteerEntity);
-        return ans;
+
+    //志愿者加入组织
+
+    @Override
+    public int joinOrg(VolunteerEntity volunteerEntity) {
+        OrganizationEntity organizationEntity = new OrganizationEntity();
+        organizationEntity.setOrgName(volunteerEntity.getVolOrganization());
+        organizationEntity.setOrgNumber(organizationEntity.getOrgNumber()+1);
+        organizationService.updateByOrgName(organizationEntity);
+
+        return volunteerEntityMapper.updateVolunteer(volunteerEntity);
     }
 }

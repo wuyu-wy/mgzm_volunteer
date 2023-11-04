@@ -24,5 +24,8 @@ public interface VolunteerService {
     //志愿者修改
     int updateVolunteer(VolunteerEntity volunteerEntity);
 
+    //志愿者加入组织
+    int joinOrg(VolunteerEntity volunteerEntity);
+
 
 }

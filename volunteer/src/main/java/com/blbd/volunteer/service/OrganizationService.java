@@ -15,6 +15,10 @@ public interface OrganizationService {
     int updateByOrgId(OrganizationEntity organizationEntity);
 
     //查找组织列表
-    List<OrganizationEntity> selectByVolunteerId(OrganizationEntity organizationEntity);
+    List<OrganizationEntity> selectByOrganizationName(OrganizationEntity organizationEntity);
 
+    //查询组织信息根据姓名,模糊加分页
+    List<OrganizationEntity> selectByOrgName(Integer curPage, Integer pageSize, OrganizationEntity organizationEntity);
+
+    int updateByOrgName(OrganizationEntity organizationEntity);
 }

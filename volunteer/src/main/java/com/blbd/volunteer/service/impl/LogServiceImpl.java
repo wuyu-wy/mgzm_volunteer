@@ -3,6 +3,7 @@ package com.blbd.volunteer.service.impl;
 import com.blbd.volunteer.dao.LogEntityMapper;
 import com.blbd.volunteer.dao.entity.LogEntity;
 import com.blbd.volunteer.service.LogService;
+import com.blbd.volunteer.utils.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,38 +16,43 @@ public class LogServiceImpl implements LogService{
     @Autowired
     public LogEntityMapper logEntityMapper;
 
-    public List<LogEntity> selectByVolunteerId(LogEntity logEntity) {
+
+    //查找志愿者Id对应的日志
+    public List<LogEntity> selectByVolunteerId(String id) {
+
         List<LogEntity> logEntityList = new ArrayList<LogEntity>();
+        LogEntity logEntity =new LogEntity();
+        logEntity.setLogId(id);
         logEntityList = logEntityMapper.selectAll(logEntity);
         return logEntityList;
     }
 
+    //新增日志
     public int insertLog(LogEntity logEntity) {
-        if(logEntityMapper.insert(logEntity) == 1){
-            return 1;
-        }else{
-            return 0;
-        }
+
+        logEntity.setLogId(UUIDUtil.getOneUUID());
+        return logEntityMapper.insert(logEntity);
+
     }
 
+
+    //删除日志
     public int deleteByLogId(LogEntity logEntity) {
-        if(logEntityMapper.delete(logEntity) == 1){
-            return 1;
-        }else{
-            return 0;
-        }
+        return logEntityMapper.delete(logEntity);
     }
 
+
+    //修改日志
     public int updateByLogId(LogEntity logEntity) {
-        if(logEntityMapper.update(logEntity) == 1){
-            return 1;
-        }else{
-            return 0;
-        }
+        return logEntityMapper.update(logEntity);
     }
 
-    public List<LogEntity> selectByLimit(Integer curPage, Integer pageSize, LogEntity logEntity) {
+
+    //分页查询
+    public List<LogEntity> selectByLimit(Integer curPage, Integer pageSize, String id) {
         List<LogEntity> logEntityList = new ArrayList<LogEntity>();
+        LogEntity logEntity = new LogEntity();
+        logEntity.setLogVolunteerId(id);
         logEntityList = logEntityMapper.selectByLimit(curPage,pageSize,logEntity);
         return logEntityList;
     }

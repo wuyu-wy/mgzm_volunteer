@@ -40,7 +40,7 @@ public class LogController {
 
     //分页查询
     @GetMapping(value = "selectByLimit" , headers = "Accept=application/json")
-    public List<LogEntity>  selectByLimit(@RequestBody Integer curPage, Integer pageSize, String id){
+    public List<LogEntity>  selectByLimit(@RequestBody Integer curPage, @RequestParam Integer pageSize, @RequestParam String id){
         return logService.selectByLimit(curPage,  pageSize, id);
     }
 

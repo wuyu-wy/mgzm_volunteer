@@ -29,8 +29,9 @@ public class VolunteerController {
 
 
     //志愿者登录账号
-    @PostMapping(value = "/login", headers = "Accept=application/json")
-    public List<VolunteerEntity> loginVolunteer(@RequestParam String username, String password){
+    @GetMapping(value = "/login", headers = "Accept=application/json")
+    public List<VolunteerEntity> loginVolunteer(@RequestParam ("username")String username,
+                                                @RequestParam ("password") String password){
 
         //根据给的账号密码，给出其list
         return volunteerService.loginVolunteer(username, password);
@@ -38,7 +39,7 @@ public class VolunteerController {
 
 
     //志愿者显示信息
-    @GetMapping(value = "queryVolunteer")
+    @PostMapping(value = "queryVolunteer",headers = "Accept=application/json")
     public List<VolunteerEntity> queryVolunteer(@RequestBody String username){
         //根据给的用户名，提供对应list
         return volunteerService.queryVolunteer(username);

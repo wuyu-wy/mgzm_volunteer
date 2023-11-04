@@ -16,7 +16,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@SpringBootTest(classes = VolunteerApplication.class)
+/**
+ * 测试类记得在springbootTest中加上webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
+ * SpringBootTest在启动的时候不会启动服务器，所以WebSocket自然会报错，这个时候需要添加选项webEnvironment，以便提供一个测试的web环境。
+ */
+@SpringBootTest(classes = VolunteerApplication.class,webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
 class TaskVolunteerApplicationTests {
     @Autowired

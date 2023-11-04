@@ -19,8 +19,9 @@ public class VolunteerController {
 
 
     // 志愿者注册账号
-    @PostMapping(value = "/register", headers = "Accept=application/json")
-    public int registerVolunteer(@RequestParam String username,  String password) throws InterruptedException {
+    @GetMapping(value = "/register", headers = "Accept=application/json")
+    public int registerVolunteer(@RequestParam ("username")String username,
+                                 @RequestParam ("password") String password) throws InterruptedException {
         // 返回1注册成功，返回0注册失败（该用户名已被占用）
         return volunteerService.registerVolunteer(username, password);
     }
@@ -45,11 +46,17 @@ public class VolunteerController {
 
 
 
+    //志愿者信息更新
     @PostMapping(value = "/update", headers = "Accept=application/json")
     public int updateVolunteer(VolunteerEntity volunteerEntity){
-
         //根据给出的新的list根据用户名更新
         //注：用户名不可修改
+        return volunteerService.updateVolunteer(volunteerEntity);
+    }
+
+    @PostMapping(value = "/joinOrg", headers = "Accept=application/json")
+    public int joinOrg(VolunteerEntity volunteerEntity){
+        //增加vol_organization即可，其他的不动
         return volunteerService.updateVolunteer(volunteerEntity);
 
     }

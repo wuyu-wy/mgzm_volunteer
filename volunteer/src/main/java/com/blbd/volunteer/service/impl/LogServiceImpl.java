@@ -16,12 +16,18 @@ public class LogServiceImpl implements LogService{
     @Autowired
     public LogEntityMapper logEntityMapper;
 
-    public List<LogEntity> selectByVolunteerId(LogEntity logEntity) {
+
+    //查找志愿者Id对应的日志
+    public List<LogEntity> selectByVolunteerId(String id) {
+
         List<LogEntity> logEntityList = new ArrayList<LogEntity>();
+        LogEntity logEntity =new LogEntity();
+        logEntity.setLogId(id);
         logEntityList = logEntityMapper.selectAll(logEntity);
         return logEntityList;
     }
 
+    //新增日志
     public int insertLog(LogEntity logEntity) {
 
         logEntity.setLogId(UUIDUtil.getOneUUID());
@@ -29,16 +35,24 @@ public class LogServiceImpl implements LogService{
 
     }
 
+
+    //删除日志
     public int deleteByLogId(LogEntity logEntity) {
         return logEntityMapper.delete(logEntity);
     }
 
+
+    //修改日志
     public int updateByLogId(LogEntity logEntity) {
         return logEntityMapper.update(logEntity);
     }
 
-    public List<LogEntity> selectByLimit(Integer curPage, Integer pageSize, LogEntity logEntity) {
+
+    //分页查询
+    public List<LogEntity> selectByLimit(Integer curPage, Integer pageSize, String id) {
         List<LogEntity> logEntityList = new ArrayList<LogEntity>();
+        LogEntity logEntity = new LogEntity();
+        logEntity.setLogVolunteerId(id);
         logEntityList = logEntityMapper.selectByLimit(curPage,pageSize,logEntity);
         return logEntityList;
     }

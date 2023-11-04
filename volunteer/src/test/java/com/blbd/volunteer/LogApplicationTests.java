@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest(classes = VolunteerApplication.class)
@@ -26,7 +27,7 @@ class LogApplicationTests {
     public void testInsertLog() {
         LogEntity logEntity = new LogEntity();
         logEntity.setLogChildId("吴昊");
-        logEntity.setLogId("111111");
+        logEntity.setLogId("1111asd11");
         logEntity.setLogVolunteerId("周义勇");
         logEntity.setLogContent("好啊");
         logEntity.setLogDate(UUIDUtil.getCurrentTime());
@@ -35,6 +36,19 @@ class LogApplicationTests {
 
     }
 
+    @Test
+    public void selectByVolunteerId() {
+
+        List<LogEntity> logEntityList = new ArrayList<LogEntity>();
+
+        LogEntity logEntity =new LogEntity();
+        logEntity.setLogVolunteerId("周义勇");
+
+        logEntityList = logEntityMapper.selectAll(logEntity);
+
+
+        System.out.println(logEntityList);
+    }
 
 
     }

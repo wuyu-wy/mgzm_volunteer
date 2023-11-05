@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blbd.volunteer.dao.ChatFriendListEntityMapper">
+
+    <resultMap id="BaseResultMap" type="com.blbd.volunteer.dao.entity.ChatFriendListEntity">
+            <id property="listId" column="list_id" jdbcType="INTEGER"/>
+            <result property="linkId" column="link_id" jdbcType="VARCHAR"/>
+            <result property="senderId" column="sender_id" jdbcType="VARCHAR"/>
+            <result property="receiverId" column="receiver_id" jdbcType="VARCHAR"/>
+            <result property="receiverPicture" column="receiver_picture" jdbcType="VARCHAR"/>
+            <result property="senderIsOnline" column="sender_is_online" jdbcType="TINYINT"/>
+            <result property="receiverIsOnline" column="receiver_is_online" jdbcType="TINYINT"/>
+            <result property="unread" column="unread" jdbcType="INTEGER"/>
+            <result property="status" column="status" jdbcType="TINYINT"/>
+    </resultMap>
+
+<!--listId自增-->
+    <insert id="insert" parameterType="chatFriendListEntity" >
+        insert into mgzm.chat_friend_list (link_id, sender_id, receiver_id, receiver_picture, sender_is_online, receiver_is_online, unread, status)
+        VALUES (#{linkId},#{senderId},#{receiverId},#{receiverPicture},#{senderIsOnline},#{receiverIsOnline},#{unread},#{status})
+    </insert>
+
+    <delete id="deleteByLinkId" parameterType="chatFriendListEntity">
+        delete from mgzm.chat_friend_list
+        where link_id = #{linkId}
+    </delete>
+
+    <update id="modify" parameterType="chatFriendListEntity" >
+        update mgzm.chat_friend_list
+        <set>
+            <if test="receiverPicture != null">
+                receiver_picture = #{receiverPicture},
+            </if>
+            <if test="senderIsOnline != null">
+                sender_is_online = #{senderIsOnline},
+            </if>
+            <if test="receiverIsOnline != null">
+                receiver_is_online = #{receiverIsOnline},
+            </if>
+            <if test="unread != null">
+                unread = #{unread}
+            </if>
+            <if test="status != null">
+                status = #{status}
+            </if>
+        </set>
+        where list_id = #{listId}
+    </update>
+
+    <select id="selectBySenderId" parameterType="chatFriendListEntity" resultMap="BaseResultMap" resultType="chatFriendListEntity">
+        select *
+        from mgzm.chat_friend_list
+        where sender_id = #{senderId}
+    </select>
+
+
+
+</mapper>

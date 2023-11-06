@@ -30,8 +30,8 @@ public class VolunteerController {
 
 
     // 志愿者注册账号
-    @GetMapping(value = "/register", headers = "Accept=application/json")
-    public int registerVolunteer(VolunteerEntity volunteerEntity) throws InterruptedException {
+    @PostMapping(value = "/register", headers = "Accept=application/json")
+    public int registerVolunteer(@RequestParam VolunteerEntity volunteerEntity){
         // 返回1注册成功，返回0注册失败（该用户名已被占用）
         return volunteerService.registerVolunteer(volunteerEntity);
     }
@@ -48,8 +48,8 @@ public class VolunteerController {
 
 
     //志愿者显示信息
-    @PostMapping(value = "queryVolunteer", headers = "Accept=application/json")
-    public List<VolunteerEntity> queryVolunteer(@RequestBody String username) {
+    @GetMapping(value = "queryVolunteer", headers = "Accept=application/json")
+    public List<VolunteerEntity> queryVolunteer(@RequestParam("username") String username) {
         //根据给的用户名，提供对应list
         return volunteerService.queryVolunteer(username);
     }
@@ -57,7 +57,7 @@ public class VolunteerController {
 
     //志愿者信息更新
     @PostMapping(value = "/update", headers = "Accept=application/json")
-    public int updateVolunteer(VolunteerEntity volunteerEntity) {
+    public int updateVolunteer(@RequestParam VolunteerEntity volunteerEntity) {
         //根据给出的新的list根据用户名更新
         //注：用户名不可修改
         return volunteerService.updateVolunteer(volunteerEntity);
@@ -65,21 +65,21 @@ public class VolunteerController {
 
     //志愿者加入组织
     @PostMapping(value = "/joinOrg", headers = "Accept=application/json")
-    public int joinOrg(VolunteerEntity volunteerEntity) {
+    public int joinOrg(@RequestParam VolunteerEntity volunteerEntity) {
         //增加vol_organization即可，其他的不动
         return volunteerService.joinOrg(volunteerEntity);
     }
 
     //志愿者退出组织
     @PostMapping(value = "/outOrg", headers = "Accept=application/json")
-    public int outOrg(VolunteerEntity volunteerEntity) {
+    public int outOrg(@RequestParam VolunteerEntity volunteerEntity) {
         //增加vol_organization即可，其他的不动
         return volunteerService.outOrg(volunteerEntity);
     }
 
     //志愿者查找所有未完成任务，点击任务按钮
     @PostMapping(value = "/selectTask", headers = "Accept=application/json")
-    public List<TaskVolunteerEntity> selectTask(VolunteerEntity volunteerEntity) {
+    public List<TaskVolunteerEntity> selectTask(@RequestParam VolunteerEntity volunteerEntity) {
 
         List<TaskVolunteerEntity> tasks = volunteerService.selectTask(volunteerEntity);
         for (TaskVolunteerEntity task : tasks) {
@@ -109,33 +109,33 @@ public class VolunteerController {
 
     //志愿者查看某一详细任务
     @PostMapping(value = "/selectOne", headers = "Accept=application/json")
-    public TaskVolunteerEntity selectOne(TaskVolunteerEntity taskVolunteerEntity) {
+    public TaskVolunteerEntity selectOne(@RequestParam TaskVolunteerEntity taskVolunteerEntity) {
         return volunteerService.selectOneTask(taskVolunteerEntity);
     }
 
 
     //志愿者评价并打分
     @PostMapping(value = "/evaluateTask", headers = "Accept=application/json")
-    public int evaluateTask(TaskVolunteerEntity taskVolunteerEntity){
+    public int evaluateTask(@RequestParam TaskVolunteerEntity taskVolunteerEntity){
         return volunteerService.evaluateTask(taskVolunteerEntity);
     }
 
     //未完成任务模糊查询显示,根据taskName
     @PostMapping(value = "/searchTask", headers = "Accept=application/json")
-    public List<TaskVolunteerEntity> searchTask(VolunteerEntity volunteerEntity){
+    public List<TaskVolunteerEntity> searchTask(@RequestParam VolunteerEntity volunteerEntity){
         return volunteerService.searchTask(volunteerEntity);
     }
 
 
     //志愿者查询已完成任务
     @PostMapping(value = "/finishTask", headers = "Accept=application/json")
-    public List<TaskVolunteerEntity> finishTask(VolunteerEntity volunteerEntity){
+    public List<TaskVolunteerEntity> finishTask(@RequestParam VolunteerEntity volunteerEntity){
         return volunteerService.finishTask(volunteerEntity);
     }
 
     //已完成任务模糊查询显示,根据taskName
     @PostMapping(value = "/finishSearchTask", headers = "Accept=application/json")
-    public List<TaskVolunteerEntity> finishSearchTask(VolunteerEntity volunteerEntity){
+    public List<TaskVolunteerEntity> finishSearchTask(@RequestParam VolunteerEntity volunteerEntity){
         return volunteerService.finishSearchTask(volunteerEntity);
     }
 

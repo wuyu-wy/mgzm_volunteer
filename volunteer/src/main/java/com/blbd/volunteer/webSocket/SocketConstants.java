@@ -12,7 +12,7 @@ public interface SocketConstants {
          */
         int HEART_BEAT = 0;
 
-        int LOGIN = 1;
+        int ONLINE = 1;
 
         int TEXT_MESSAGE = 2;
 

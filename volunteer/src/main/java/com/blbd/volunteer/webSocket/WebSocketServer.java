@@ -1,10 +1,14 @@
 package com.blbd.volunteer.webSocket;
 
 import com.alibaba.fastjson.JSON;
+import com.blbd.volunteer.dao.entity.ChatFriendListEntity;
 import com.blbd.volunteer.dao.entity.ChatMsgEntity;
+import com.blbd.volunteer.service.ChatFriendListService;
+import com.blbd.volunteer.service.ChatMsgService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 
@@ -12,6 +16,7 @@ import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -20,6 +25,12 @@ import java.util.concurrent.ConcurrentHashMap;
 @ServerEndpoint(value = "/websocket/{userId}")
 @Component
 public class WebSocketServer {
+    @Autowired
+    ChatMsgService chatMsgService;
+
+    @Autowired
+    ChatFriendListService chatFriendListService;
+
     private static Logger log = LoggerFactory.getLogger(WebSocketServer.class);
     /**静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。*/
     private static int onlineCount = 0;
@@ -111,6 +122,7 @@ public class WebSocketServer {
     /**
      * 处理信息
      */
+
     public void handleTextMessage(Session session, TextMessage message) throws Exception {
         log.warn("=========== Received message: {}", message.getPayload());
 
@@ -120,14 +132,36 @@ public class WebSocketServer {
         if (chatMsgEntity.getMsgType() == SocketConstants.MsgType.HEART_BEAT) {
             // 心跳消息
             webSocketMap.get(userId).sendMessage("pong");
-        } else if (chatMsgEntity.getMsgType() == SocketConstants.MsgType.LOGIN) {
+        } else if (chatMsgEntity.getMsgType() == SocketConstants.MsgType.ONLINE) {
             log.info("登录消息，用户:" + chatMsgEntity.getSenderId() + "上线");
 
         } else if (chatMsgEntity.getMsgType() == SocketConstants.MsgType.TEXT_MESSAGE) {
             if (StringUtils.isBlank(chatMsgEntity.getSenderId())) {
                 throw new Exception("用户ID不能为空");
             }
+            /**
+             * 先通过websocket发送消息到对方
+             */
             sendOneMessage( chatMsgEntity.getSenderId(), (String) chatMsgEntity.getMsgBody(), chatMsgEntity.getReceiverId());
+            /**
+             * 再将消息保存到数据库
+             */
+            //查询在线状况
+            ChatFriendListEntity chatFriendListEntity = new ChatFriendListEntity();
+            chatFriendListEntity.setLinkId(chatMsgEntity.getLinkId());
+            List<ChatFriendListEntity> cfleList = chatFriendListService.selectTwoListByLinkId(chatFriendListEntity);
+
+            if(chatMsgService.saveMessage(chatMsgEntity) == 1) {
+                //若对方不在线 对方unread+1 加的是对方是sender的那项的unread ，若对方在线则不改
+                for (ChatFriendListEntity c : cfleList) {
+                    if (c.getSenderId().equals(chatMsgEntity.getReceiverId())) {
+                        if (c.getSenderIsOnline() == 0) {
+                            c.setUnread(c.getUnread() + 1);
+                            chatFriendListService.modify(c);
+                        }
+                    }
+                }
+            }
 
         } else if (chatMsgEntity.getMsgType() == SocketConstants.MsgType.IMAGE) {
             if (StringUtils.isBlank(chatMsgEntity.getSenderId())) {

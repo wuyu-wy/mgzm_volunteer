@@ -23,14 +23,13 @@ public class ChatMsgController {
 
 
     /**
-     * 发送消息时保存消息 设置sendTime is_latest
+     * 发送消息时保存消息
      * @param chatMsgEntity
      * @return
      */
     @PostMapping(value = "/sendMsg", headers = "Accept=application/json")
     public HttpResponseEntity sendMsg(@RequestBody ChatMsgEntity chatMsgEntity) {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
-        chatMsgEntity.setSendTime(new Date(System.currentTimeMillis()));
 
         //查询在线状况
         ChatFriendListEntity chatFriendListEntity = new ChatFriendListEntity();

@@ -15,11 +15,12 @@ public interface VolunteerEntityMapper {
     //新增志愿者信息，即注册，测试成功
     int insert(VolunteerEntity volunteerEntity);
 
-
     List<VolunteerEntity> selectVolunteerInfo(VolunteerEntity volunteerEntity);
 
     List<VolunteerEntity> selectVolunteerUsername(VolunteerEntity volunteerEntity);
 
     int updateVolunteer(VolunteerEntity volunteerEntity);
+
+    VolunteerEntity selectVolunteerById(VolunteerEntity volunteerEntity);
 
 }

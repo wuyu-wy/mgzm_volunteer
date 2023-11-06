@@ -22,7 +22,8 @@ public class OrganizationServiceImpl implements OrganizationService {
     public int insertOrg(OrganizationEntity organizationEntity) {
         organizationEntity.setOrgId(UUIDUtil.getOneUUID());
         organizationEntity.setOrgNumber(1);
-        organizationEntity.setOrgPassIf("no");
+        organizationEntity.setOrgPassIf("0");
+        organizationEntity.setOrgId(UUIDUtil.getOneUUID());
 
         List<OrganizationEntity> ifHave = organizationEntityMapper.selectByOrganizationName(organizationEntity);
 
@@ -53,12 +54,12 @@ public class OrganizationServiceImpl implements OrganizationService {
     //查询组织信息根据姓名,模糊加分页
     public List<OrganizationEntity> selectByOrgName(Integer curPage, Integer pageSize,OrganizationEntity organizationEntity){
         List<OrganizationEntity> organizationEntityList = new ArrayList<OrganizationEntity>();
-        organizationEntityList = organizationEntityMapper.selectByOrganizationName(organizationEntity);
+        organizationEntityList = organizationEntityMapper.selectByOrgName(organizationEntity);
         return organizationEntityList;
     }
 
 
-    //通过姓名查询为更新numver
+    //通过姓名查询为更新number
     public int updateByOrgName(OrganizationEntity organizationEntity) {
         return organizationEntityMapper.updateByOrgName(organizationEntity);
     }

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blbd.volunteer.dao.ChildEntityMapper">
+
+    <resultMap id="ChildMap" type="com.blbd.volunteer.dao.entity.ChildEntity">
+        <id column="id" jdbcType="VARCHAR" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+    </resultMap>
+
+    <select id="updateChildName" resultType="com.blbd.volunteer.dao.entity.TaskChildEntity" resultMap="ChildMap">
+        select name
+        from child
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+
+
+
+</mapper>

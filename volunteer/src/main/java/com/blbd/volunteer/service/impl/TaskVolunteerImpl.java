@@ -14,27 +14,10 @@ public class TaskVolunteerImpl implements TaskVolunteerService {
     @Autowired
     TaskVolunteerEntityMapper taskVolunteerEntityMapper;
 
-    //新增任务-志愿者
-    public int volunteerAcceptTask(TaskVolunteerEntity taskVolunteerEntity) {
-        if(taskVolunteerEntityMapper.insert(taskVolunteerEntity) == 1) {
-            return 1;
-        } else {
-            return 0;
-        }
-    }
 
-    //修改任务志愿者
-    public int modifyTaskVolunteer(TaskVolunteerEntity taskVolunteerEntity) {
-        if(taskVolunteerEntityMapper.update(taskVolunteerEntity) == 1) {
-            return 1;
-        } else {
-            return 0;
-        }
-    }
-
-    //查询任务-志愿者
-    public List<TaskVolunteerEntity> selectTaskVolunteer(TaskVolunteerEntity taskVolunteerEntity) {
-        return taskVolunteerEntityMapper.selectAll(taskVolunteerEntity);
+    //更新信息
+    public int updateNew(TaskVolunteerEntity taskVolunteerEntity){
+        return taskVolunteerEntityMapper.updateNew(taskVolunteerEntity);
     }
 
 }

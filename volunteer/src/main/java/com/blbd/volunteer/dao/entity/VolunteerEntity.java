@@ -10,6 +10,24 @@ public class VolunteerEntity {
     private int volDuty;
     private int volCorrectedTasks;
     private String volTel;
+    private String volSfz;
+    private String ifPass;
+
+    public String getVolSfz() {
+        return volSfz;
+    }
+
+    public void setVolSfz(String volSfz) {
+        this.volSfz = volSfz;
+    }
+
+    public String getIfPass() {
+        return ifPass;
+    }
+
+    public void setIfPass(String ifPass) {
+        this.ifPass = ifPass;
+    }
 
     public String getVolId() {
         return volId;
@@ -95,6 +113,8 @@ public class VolunteerEntity {
                 ", volDuty=" + volDuty +
                 ", volCorrectedTasks=" + volCorrectedTasks +
                 ", volTel='" + volTel + '\'' +
+                ", volSfz='" + volSfz + '\'' +
+                ", ifPass='" + ifPass + '\'' +
                 '}';
     }
 }

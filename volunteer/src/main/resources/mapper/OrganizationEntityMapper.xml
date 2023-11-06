@@ -13,6 +13,7 @@
 
     </resultMap>
 
+
     <!--建立组织-->
     <insert id="insert" parameterType="organizationEntity">
         insert into organization (org_id, org_name,org_introduction,
@@ -22,17 +23,17 @@
                 #{orgPassIf,jdbcType=VARCHAR})
     </insert>
 
+
     <!--模糊分页查询，用于搜索组织-->
     <select id="selectByOrgName" parameterType="organizationEntity" resultType="com.blbd.volunteer.dao.entity.OrganizationEntity" resultMap="OrganizationMap">
         select
             org_id, org_name, org_introduction, org_number,
             org_address, org_volunteer_id, org_pass_if
         from organization
-        where org_name like CONCAT('%', #{orgName, jdbcType=VARCHAR}, '%') -- 使用 LIKE 进行模糊匹配
+        where org_name like CONCAT('%', #{orgName, jdbcType=VARCHAR}, '%') AND org_pass_if = 1 -- 使用 LIKE 进行模糊匹配
 --             limit #{pageSize} offset #{offset} -- 添加分页参数
                limit #{curPage},#{pageSize}
     </select>
-
 
 
     <!--查找组织-->
@@ -41,9 +42,20 @@
             org_id, org_name, org_introduction, org_number,
             org_address, org_volunteer_id, org_pass_if
         from organization
-        where org_name = #{orgName,jdbcType=VARCHAR}
+        where org_name = #{orgName,jdbcType=VARCHAR} AND org_pass_if = 1
 
     </select>
+
+
+    <select id="selectNum" parameterType="organizationEntity" resultType="com.blbd.volunteer.dao.entity.OrganizationEntity" resultMap="OrganizationMap">
+        select
+            org_id, org_name, org_introduction, org_number,
+            org_address, org_volunteer_id, org_pass_if
+        from organization
+        where org_name = #{orgName,jdbcType=VARCHAR} AND org_pass_if = 1
+
+    </select>
+
 
     <!--分页查询-->
     <select id="selectByLimit" resultType="com.blbd.volunteer.dao.entity.OrganizationEntity">
@@ -78,7 +90,7 @@
         where org_id = #{orgId,jdbcType=VARCHAR}
     </update>
 
-    <!--修改组织信息-->
+    <!--修改组织信息,志愿者加入组织num+1-->
     <update id="updateByOrgName" parameterType="organizationEntity">
         update organization
         <set>

@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.Map;
 
 
-@CrossOrigin("*")
 @RestController
 @RequestMapping("/Volunteer")
+@CrossOrigin("*")
 public class VolunteerController {
 
     @Autowired

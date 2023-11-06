@@ -154,6 +154,9 @@ public class VolunteerServiceImpl implements VolunteerService {
         newvolunteerEntity.setVolCorrectedTasks(newvolunteerEntity.getVolCorrectedTasks() + 1);
         volunteerEntityMapper.updateVolunteer(newvolunteerEntity);
 
+
+        taskVolunteerEntity.setApprovalFinishTime(UUIDUtil.getCurrentTime());
+
         return taskVolunteerEntityMapper.evaluateTask(taskVolunteerEntity);
     }
 

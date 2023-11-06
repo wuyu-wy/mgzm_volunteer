@@ -54,7 +54,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     //查询组织信息根据姓名,模糊加分页
     public List<OrganizationEntity> selectByOrgName(Integer curPage, Integer pageSize,OrganizationEntity organizationEntity){
         List<OrganizationEntity> organizationEntityList = new ArrayList<OrganizationEntity>();
-        organizationEntityList = organizationEntityMapper.selectByOrganizationName(organizationEntity);
+        organizationEntityList = organizationEntityMapper.selectByOrgName(organizationEntity);
         return organizationEntityList;
     }
 

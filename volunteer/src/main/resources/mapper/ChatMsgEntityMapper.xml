@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blbd.volunteer.dao.ChatMsgEntityMapper">
+
+    <resultMap id="BaseResultMap" type="com.blbd.volunteer.dao.entity.ChatMsgEntity">
+            <id property="messageId" column="message_id" jdbcType="INTEGER"/>
+            <result property="linkId" column="link_id" jdbcType="VARCHAR"/>
+            <result property="msgType" column="msg_type" jdbcType="INTEGER"/>
+            <result property="senderId" column="sender_id" jdbcType="VARCHAR"/>
+            <result property="receiverId" column="receiver_id" jdbcType="VARCHAR"/>
+            <result property="msgBody" column="msg_body" jdbcType="VARCHAR"/>
+            <result property="sendTime" column="send_time" jdbcType="TIMESTAMP"/>
+            <result property="isLatest" column="is_latest" jdbcType="TINYINT"/>
+    </resultMap>
+
+<!--    messageId自增-->
+    <insert id="insert" parameterType="chatMsgEntity" >
+        insert into mgzm.chat_msg(link_id, msg_type, sender_id, receiver_id, msg_body, send_time, is_latest)
+        VALUES(#{linkId},#{msgType},#{senderId},#{receiverId},#{msgBody},#{sendTime},#{isLatest})
+    </insert>
+
+    <delete id="deleteByMessageId" parameterType="chatMsgEntity" >
+        delete from mgzm.chat_msg
+        where message_id = #{messageId}
+    </delete>
+    <update id="modify" parameterType="chatMsgEntity" >
+        update mgzm.chat_msg
+        <set>
+            <if test="isLatest != null">
+                is_latest = #{isLatest},
+            </if>
+
+        </set>
+        where message_id = #{messageId}
+    </update>
+
+    <select id="selectByLinkId" parameterType="chatMsgEntity" resultMap="BaseResultMap" resultType="chatMsgEntity">
+        select * from mgzm.chat_msg where link_id = #{linkId}
+    </select>
+</mapper>

@@ -33,7 +33,6 @@ public class LogController {
     @PostMapping(value = "/delete", headers = "Accept=application/json")
     public int deleteLog(@RequestParam LogEntity logEntity){return logService.deleteByLogId(logEntity);}
 
-
     //查找志愿者Id对应的日志
     @GetMapping(value = "selectByVolunteerId", headers = "Accept=application/json")
     public List<LogEntity> selectByVolunteerId(@RequestParam String id){return logService.selectByVolunteerId(id);}

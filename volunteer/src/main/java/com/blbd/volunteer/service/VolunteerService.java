@@ -17,7 +17,7 @@ public interface VolunteerService {
     List<VolunteerEntity> loginVolunteer(String username, String password);
 
     //志愿者注册
-    int registerVolunteer(String username,String password);
+    int registerVolunteer(VolunteerEntity volunteerEntity);
 
     //志愿者查询
     List<VolunteerEntity> queryVolunteer(String username);

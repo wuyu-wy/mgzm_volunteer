@@ -42,11 +42,11 @@ public class VolunteerServiceImpl implements VolunteerService {
 
     //志愿者注册
     @Override
-    public int registerVolunteer(String username, String password) {
+    public int registerVolunteer(VolunteerEntity volunteerEntity) {
 
-        VolunteerEntity volunteerEntity = new VolunteerEntity();
-        volunteerEntity.setVolUsername(username);
-        volunteerEntity.setVolPassword(password);
+        volunteerEntity.setIfPass("0");
+        volunteerEntity.setVolDuty(0);
+        volunteerEntity.setVolCorrectedTasks(0);
         volunteerEntity.setVolId(UUIDUtil.getOneUUID());
 
         List<VolunteerEntity> ifHave = volunteerEntityMapper.selectVolunteerUsername(volunteerEntity);

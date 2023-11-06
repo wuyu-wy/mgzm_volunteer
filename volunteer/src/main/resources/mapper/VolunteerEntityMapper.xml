@@ -12,6 +12,8 @@
         <result column="vol_duty" jdbcType="INTEGER" property="volDuty"/>
         <result column="vol_corrected_tasks" jdbcType="INTEGER" property="volCorrectedTasks"/>
         <result column="vol_tel" jdbcType="VARCHAR" property="volTel"/>
+        <result column="vol_sfz" jdbcType="VARCHAR" property="volSfz"/>
+        <result column="if_pass" jdbcType="VARCHAR" property="ifPass"/>
 
     </resultMap>
 
@@ -21,11 +23,12 @@
         insert into volunteer (vol_id, vol_username,vol_password,
         vol_name, vol_locate,
         vol_organization, vol_duty, vol_corrected_tasks,
-        vol_tel)
+        vol_tel, vol_sfz, if_pass)
         values (#{volId,jdbcType=VARCHAR}, #{volUsername,jdbcType=VARCHAR}, #{volPassword,jdbcType=VARCHAR},
         #{volName,jdbcType=VARCHAR}, #{volLocate,jdbcType=VARCHAR},
         #{volOrganization,jdbcType=VARCHAR}, #{volDuty,jdbcType=INTEGER},
-        #{volCorrectedTasks,jdbcType=INTEGER}, #{volTel,jdbcType=VARCHAR})
+        #{volCorrectedTasks,jdbcType=INTEGER}, #{volTel,jdbcType=VARCHAR},
+        #{volSfz,jdbcType=VARCHAR},#{ifPass,jdbcType=VARCHAR})
     </insert>
 
 
@@ -34,7 +37,7 @@
     <!-- 查询志愿者信息，测试成功 -->
     <select id="selectVolunteerInfo"  parameterType="VolunteerEntity" resultType="arraylist" resultMap="VolunteerMap" >
         select vol_id, vol_username, vol_password, vol_name, vol_locate,
-               vol_organization, vol_duty, vol_corrected_tasks, vol_tel
+               vol_organization, vol_duty, vol_corrected_tasks, vol_tel, vol_sfz, if_pass
         from volunteer
         where vol_username = #{volUsername,jdbcType=VARCHAR} and vol_password = #{volPassword,jdbcType=VARCHAR}
     </select>
@@ -45,7 +48,7 @@
         select vol_id, vol_username, vol_password,
                vol_name, vol_locate,
                vol_organization, vol_duty, vol_corrected_tasks,
-               vol_tel
+               vol_tel, vol_sfz, if_pass
         from volunteer
         where vol_username = #{volUsername,jdbcType=VARCHAR}
     </select>
@@ -62,7 +65,8 @@
             <if test="volOrganization != null">vol_organization = #{volOrganization,jdbcType=CHAR},</if>
             <if test="volDuty != null">vol_duty = #{volDuty,jdbcType=INTEGER},</if>
             <if test="volCorrectedTasks != null">vol_corrected_tasks = #{volCorrectedTasks,jdbcType=INTEGER},</if>
-            <if test="volTel != null">vol_tel = #{volTel,jdbcType=VARCHAR}</if>
+            <if test="volSfz != null">vol_sfz = #{volSfz,jdbcType=VARCHAR}</if>
+            <if test="ifPass != null">if_pass = #{ifPass,jdbcType=VARCHAR}</if>
         </set>
         where vol_username = #{volUsername,jdbcType=VARCHAR}
     </update>
@@ -73,7 +77,7 @@
         select vol_id, vol_username, vol_password,
                vol_name, vol_locate,
                vol_organization, vol_duty, vol_corrected_tasks,
-               vol_tel
+               vol_tel, vol_sfz, if_pass
         from volunteer
         where vol_id = #{volId,jdbcType=VARCHAR}
     </select>

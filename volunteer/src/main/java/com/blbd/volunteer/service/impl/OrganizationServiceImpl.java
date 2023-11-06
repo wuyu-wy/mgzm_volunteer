@@ -23,6 +23,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         organizationEntity.setOrgId(UUIDUtil.getOneUUID());
         organizationEntity.setOrgNumber(1);
         organizationEntity.setOrgPassIf("0");
+        organizationEntity.setOrgId(UUIDUtil.getOneUUID());
 
         List<OrganizationEntity> ifHave = organizationEntityMapper.selectByOrganizationName(organizationEntity);
 

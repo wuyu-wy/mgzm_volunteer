@@ -31,10 +31,9 @@ public class VolunteerController {
 
     // 志愿者注册账号
     @GetMapping(value = "/register", headers = "Accept=application/json")
-    public int registerVolunteer(@RequestParam("username") String username,
-                                 @RequestParam("password") String password) throws InterruptedException {
+    public int registerVolunteer(VolunteerEntity volunteerEntity) throws InterruptedException {
         // 返回1注册成功，返回0注册失败（该用户名已被占用）
-        return volunteerService.registerVolunteer(username, password);
+        return volunteerService.registerVolunteer(volunteerEntity);
     }
 
 

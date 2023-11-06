@@ -84,7 +84,7 @@ public class WebSocketServer {
             try {
                 //传送给对应userId用户的websocket, 如果userId不为空 并且 webSocketMap种包含userId 才会发送消息
                 if(StringUtils.isNotBlank(userId) && webSocketMap.containsKey(userId)){
-                    webSocketMap.get(userId).sendMessage("心跳响应");
+//                    webSocketMap.get(userId).sendMessage("心跳响应");
                     //处理用户发来的消息
                     handleTextMessage(session, new TextMessage(message));
                 }else{
@@ -114,18 +114,12 @@ public class WebSocketServer {
     public void handleTextMessage(Session session, TextMessage message) throws Exception {
         log.warn("=========== Received message: {}", message.getPayload());
 
-        //回应客户端心跳ping
-        if ("ping".equals(message.getPayload())) {
-//            webSocketMap.get(userId).sendMessage("pong");
-            return;
-        }
-
         //承接客户端message
         ChatMsgEntity chatMsgEntity = JSON.parseObject(message.getPayload(), ChatMsgEntity.class);
         //根据消息类型分别处理
         if (chatMsgEntity.getMsgType() == SocketConstants.MsgType.HEART_BEAT) {
             // 心跳消息
-
+            webSocketMap.get(userId).sendMessage("pong");
         } else if (chatMsgEntity.getMsgType() == SocketConstants.MsgType.LOGIN) {
             log.info("登录消息，用户:" + chatMsgEntity.getSenderId() + "上线");
 

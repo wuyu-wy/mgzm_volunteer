@@ -20,6 +20,7 @@ public interface ChatFriendListEntityMapper  {
     int deleteByLinkId(ChatFriendListEntity chatFriendListEntity);
     int modify(ChatFriendListEntity chatFriendListEntity);
     List<ChatFriendListEntity> selectBySenderId(ChatFriendListEntity chatFriendListEntity);
+    List<ChatFriendListEntity> selectByLinkId(ChatFriendListEntity chatFriendListEntity);
 
 }
 

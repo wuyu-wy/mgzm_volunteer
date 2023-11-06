@@ -39,6 +39,7 @@
         where vol_username = #{volUsername,jdbcType=VARCHAR} and vol_password = #{volPassword,jdbcType=VARCHAR}
     </select>
 
+
     <!-- 查询username是否已有 -->
     <select id="selectVolunteerUsername"  parameterType="VolunteerEntity" resultType="arraylist" resultMap="VolunteerMap">
         select vol_id, vol_username, vol_password,
@@ -65,6 +66,20 @@
         </set>
         where vol_username = #{volUsername,jdbcType=VARCHAR}
     </update>
+
+
+    <!-- 查询volunteer根据id -->
+    <select id="selectVolunteerById"  parameterType="VolunteerEntity" resultType="arraylist" resultMap="VolunteerMap">
+        select vol_id, vol_username, vol_password,
+               vol_name, vol_locate,
+               vol_organization, vol_duty, vol_corrected_tasks,
+               vol_tel
+        from volunteer
+        where vol_id = #{volId,jdbcType=VARCHAR}
+    </select>
+
+
+
 
 
 

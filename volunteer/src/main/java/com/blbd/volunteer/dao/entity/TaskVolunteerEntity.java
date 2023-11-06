@@ -14,4 +14,8 @@ public class TaskVolunteerEntity {
     private Date approvalEndTime;
     private byte isCompletedApproval;
     private String approvalComments;
+    private String homeworkPhoto;
+    private String taskPhoto;
+    private String childName;
+    private String taskName;
 }

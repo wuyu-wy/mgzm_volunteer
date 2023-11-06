@@ -58,7 +58,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
 
-    //通过姓名查询为更新numver
+    //通过姓名查询为更新number
     public int updateByOrgName(OrganizationEntity organizationEntity) {
         return organizationEntityMapper.updateByOrgName(organizationEntity);
     }

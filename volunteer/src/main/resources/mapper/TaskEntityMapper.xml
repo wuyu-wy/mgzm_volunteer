@@ -19,5 +19,12 @@
 
     </resultMap>
 
+    <select id="selectTaskInfo"  parameterType="TaskEntity" resultType="arraylist" resultMap="TaskMap" >
+        select id, score, start_time, finish_time, video,
+               subject, grade, status, is_must_do, content, name, task_photo
+        from task
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+
 
 </mapper>

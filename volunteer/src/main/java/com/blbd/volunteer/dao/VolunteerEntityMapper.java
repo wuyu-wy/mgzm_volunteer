@@ -22,4 +22,6 @@ public interface VolunteerEntityMapper {
 
     int updateVolunteer(VolunteerEntity volunteerEntity);
 
+    VolunteerEntity selectVolunteerById(VolunteerEntity volunteerEntity);
+
 }

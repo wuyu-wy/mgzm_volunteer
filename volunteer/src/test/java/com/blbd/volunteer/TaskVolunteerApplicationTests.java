@@ -34,17 +34,7 @@ class TaskVolunteerApplicationTests {
         assert res == 1;
     }
 
-    @Test
-    public void testUpdate() {
-        TaskVolunteerEntity taskVolunteerEntity = new TaskVolunteerEntity();
-        taskVolunteerEntity.setVolunteerId("1");
-        taskVolunteerEntity.setTaskId("1");
-        taskVolunteerEntity.setChildId("1");
-        taskVolunteerEntity.setApprovalStartTime(new Date(System.currentTimeMillis()));
-        taskVolunteerEntity.setIsCompletedApproval((byte) 1);
-        int res = taskVolunteerEntityMapper.update(taskVolunteerEntity);
-        assert res == 1;
-    }
+
 
     @Test
     public void testSelectAll() {

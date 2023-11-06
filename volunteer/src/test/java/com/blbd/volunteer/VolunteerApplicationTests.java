@@ -1,12 +1,15 @@
 package com.blbd.volunteer;
 
+import com.blbd.volunteer.dao.OrganizationEntityMapper;
 import com.blbd.volunteer.dao.VolunteerEntityMapper;
-import com.blbd.volunteer.dao.entity.VolunteerEntity;
+import com.blbd.volunteer.dao.entity.*;
+import com.blbd.volunteer.service.*;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
@@ -17,6 +20,8 @@ class VolunteerApplicationTests {
 
     @Autowired
     private VolunteerEntityMapper volunteerEntityMapper;
+    @Autowired
+    private OrganizationEntityMapper organizationEntityMapper;
 
 
     //新增志愿者测试，测试成功
@@ -64,6 +69,74 @@ class VolunteerApplicationTests {
         System.out.println(rowsSelected);
     }
 
+
+    //志愿者加入组织测试
+    @Test
+    public void testJoin(){
+        VolunteerEntity volunteerEntity = new VolunteerEntity();
+        volunteerEntity.setVolUsername("wuwusss");
+        volunteerEntity.setVolOrganization("2");
+
+        volunteerEntityMapper.updateVolunteer(volunteerEntity);
+        OrganizationEntity neworganizationEntity = new OrganizationEntity();
+        OrganizationEntity organizationEntity = new OrganizationEntity();
+        organizationEntity.setOrgName(volunteerEntity.getVolOrganization());
+
+        neworganizationEntity = organizationEntityMapper.selectNum(organizationEntity);
+        organizationEntity.setOrgNumber(neworganizationEntity.getOrgNumber()+1);
+
+        organizationEntityMapper.updateByOrgName(organizationEntity);
+
+
+
     }
+
+    @Autowired
+    private VolunteerService volunteerService;
+
+    @Autowired
+    private TaskVolunteerService taskVolunteerService;
+    @Autowired
+    private ChildService childService;
+    @Autowired
+    private TaskService taskService;
+
+    @Autowired
+    private TaskChildService taskChildService;
+
+    @Test
+    public void selectTask() {
+
+        VolunteerEntity volunteerEntity = new VolunteerEntity();
+        volunteerEntity.setVolId("1");
+
+
+        List<TaskVolunteerEntity> tasks = volunteerService.selectTask(volunteerEntity);
+        for (TaskVolunteerEntity task : tasks) {
+
+            TaskEntity taskEntity = new TaskEntity();
+            taskEntity.setId(task.getTaskId());
+            TaskEntity newTaskEntity = taskService.selectTaskInfo(taskEntity);
+
+            ChildEntity childEntity = new ChildEntity();
+            childEntity.setId(task.getChildId());
+            ChildEntity newChildEntity = childService.updateChildName(childEntity);
+
+            TaskChildEntity taskChildEntity = new TaskChildEntity();
+            taskChildEntity.setTaskId(task.getTaskId());
+            TaskChildEntity newTaskChildEntity = taskChildService.updatePhoto(taskChildEntity);
+
+            task.setTaskName(newTaskEntity.getName());
+            task.setTaskPhoto(newTaskEntity.getTaskPhoto());
+            task.setChildName(newChildEntity.getName());
+            task.setHomeworkPhoto(newTaskChildEntity.getHomeworkPhoto());
+
+            taskVolunteerService.updateNew(task);
+        }
+
+        System.out.println(volunteerService.selectTask(volunteerEntity));
+    }
+
+}
 
 

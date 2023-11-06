@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blbd.volunteer.dao.TaskChildEntityMapper">
+
+    <resultMap id="TaskChildMap" type="com.blbd.volunteer.dao.entity.TaskChildEntity">
+        <id column="task_id" jdbcType="VARCHAR" property="taskId" />
+        <result column="child_id" jdbcType="VARCHAR" property="childId" />
+        <result column="homework_photo" jdbcType="VARCHAR" property="homeworkPhoto" />
+    </resultMap>
+
+    <select id="updatePhoto" resultType="com.blbd.volunteer.dao.entity.TaskChildEntity" resultMap="TaskChildMap">
+        select homework_photo
+        from task_child
+        where task_id = #{taskId,jdbcType=VARCHAR}
+    </select>
+
+
+
+
+
+</mapper>

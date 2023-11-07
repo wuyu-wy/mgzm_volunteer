@@ -14,3 +14,17 @@ spring:
     username: mgzm_user
     password: mgzm123456
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+  servlet:
+    multipart:
+      enabled: true
+      # 文件上传的最大值
+      max-file-size: 512MB
+      # 文件请求的最大值
+      max-request-size: 512MB
+
+# 文件上传位置
+fileLocation: static/files
+
+
+

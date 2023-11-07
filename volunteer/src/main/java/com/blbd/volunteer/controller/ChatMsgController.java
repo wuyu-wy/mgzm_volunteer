@@ -27,8 +27,8 @@ public class ChatMsgController {
      * @param chatMsgEntity
      * @return
      */
-    @PostMapping(value = "/sendMsg", headers = "Accept=application/json")
-    public HttpResponseEntity sendMsg(@RequestBody ChatMsgEntity chatMsgEntity) {
+    @PostMapping(value = "/saveMsg", headers = "Accept=application/json")
+    public HttpResponseEntity saveMsg(@RequestBody ChatMsgEntity chatMsgEntity) {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
 
         //查询在线状况

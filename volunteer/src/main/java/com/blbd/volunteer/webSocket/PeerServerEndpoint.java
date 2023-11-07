@@ -10,7 +10,6 @@ import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.Map;
-
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -39,9 +38,7 @@ public class PeerServerEndpoint {
     @OnClose
     public void onClose(Session session, @PathParam("peerId") String peerId) {
         //log.warn("on close:the session is is :{},the peer id is:{}", session.getId(), peerId);
-
         Session removedSession = PeerServerEndpoint.peerIdSessionMap.remove(peerId);
-
         try {
             if (removedSession != null) {
                 removedSession.close();
@@ -51,22 +48,12 @@ public class PeerServerEndpoint {
         } finally {
             refreshOnlineSessionsList();
         }
-//        try {
-//            if (Objects.nonNull(removedSession)) {
-//                removedSession.close();
-//            }
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        } finally {
-//            refreshOnlineSessionsList();
-//        }
     }
 
     @OnError
     public void onError(Session session, Throwable e, @PathParam("peerId") String peerId) {
         //log.error("on error:the session is is :{},the exception class is: {},the peer id is:{}", session.getId(), e.getClass(), peerId);
         onClose(session, peerId);
-
         e.printStackTrace();
     }
 
@@ -74,12 +61,9 @@ public class PeerServerEndpoint {
         for(Map.Entry<String, Session> entry : PeerServerEndpoint.peerIdSessionMap.entrySet()) {
             String key = entry.getKey();
             Session value = entry.getValue();
-
             value.getAsyncRemote().sendText(JSON.toJSONString(PeerServerEndpoint.peerIdSessionMap.keySet()));
         }
-//        PeerServerEndpoint.peerIdSessionMap.forEach((key, value) -> {
-//            value.getAsyncRemote().sendText(JSON.toJSONString(PeerServerEndpoint.peerIdSessionMap.keySet()));
-//        });
+
     }
 
 }

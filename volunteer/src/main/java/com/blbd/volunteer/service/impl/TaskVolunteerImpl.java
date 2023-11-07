@@ -14,7 +14,6 @@ public class TaskVolunteerImpl implements TaskVolunteerService {
     @Autowired
     TaskVolunteerEntityMapper taskVolunteerEntityMapper;
 
-
     //更新信息
     public int updateNew(TaskVolunteerEntity taskVolunteerEntity){
         return taskVolunteerEntityMapper.updateNew(taskVolunteerEntity);

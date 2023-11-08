@@ -19,19 +19,19 @@ public class LogController {
 
     //新增日志
     @PostMapping(value = "/insert", headers = "Accept=application/json")
-    public int insertLog(@RequestParam LogEntity logEntity){
+    public int insertLog(@RequestBody LogEntity logEntity){
         return logService.insertLog(logEntity);
     }
 
     //修改日志
     @PostMapping(value = "/update", headers = "Accept=application/json")
-    public int updateLog(@RequestParam LogEntity logEntity){
+    public int updateLog(@RequestBody LogEntity logEntity){
         return logService.updateByLogId(logEntity);
     }
 
     //删除日志
     @PostMapping(value = "/delete", headers = "Accept=application/json")
-    public int deleteLog(@RequestParam LogEntity logEntity){return logService.deleteByLogId(logEntity);}
+    public int deleteLog(@RequestBody LogEntity logEntity){return logService.deleteByLogId(logEntity);}
 
     //查找志愿者Id对应的日志
     @GetMapping(value = "selectByVolunteerId", headers = "Accept=application/json")
@@ -39,7 +39,7 @@ public class LogController {
 
     //分页查询
     @GetMapping(value = "selectByLimit" , headers = "Accept=application/json")
-    public List<LogEntity>  selectByLimit(@RequestBody Integer curPage, @RequestParam Integer pageSize, @RequestParam String id){
+    public List<LogEntity>  selectByLimit(@RequestBody Integer curPage, @RequestParam Integer pageSize, @RequestBody String id){
         return logService.selectByLimit(curPage,  pageSize, id);
     }
 

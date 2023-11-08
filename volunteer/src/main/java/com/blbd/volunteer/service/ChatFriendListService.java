@@ -27,4 +27,9 @@ public interface ChatFriendListService {
     //通过linkId查询双向好友列表
     List<ChatFriendListEntity> selectTwoListByLinkId(ChatFriendListEntity chatFriendListEntity);
 
+    //用户上线，修改所有receiver为用户id的在线信息
+    boolean modifyOnline(ChatFriendListEntity chatFriendListEntity);
+
+    boolean modifyOffline(ChatFriendListEntity chatFriendListEntity);
+
 }

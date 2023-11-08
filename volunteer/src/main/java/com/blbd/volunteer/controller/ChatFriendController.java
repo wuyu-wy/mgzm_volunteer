@@ -93,7 +93,7 @@ public class ChatFriendController {
 
 
     /**
-     * 点击好友列表中某一个好友打开聊天框时调用，双向设置己方上线，设置未读归0，并设置对方最后一条消息为最新消息latest（MsgController中查询方法设置）
+     * 点击好友列表中某一个好友打开聊天框时调用，双向设置己方上线
      * @param chatFriendListEntity
      * @return HttpResponseEntity
      */
@@ -108,9 +108,8 @@ public class ChatFriendController {
         for(ChatFriendListEntity cfle : list) {
             //好友列表根据senderId查询，所以前端列表senderId都为用户Id
             if(cfle.getSenderId().equals(chatFriendListEntity.getSenderId())) {
-                //己方的cfle 设置在线，未读归0
+                //己方的cfle 设置在线
                 cfle.setSenderIsOnline(1);
-                cfle.setUnread(0);
                 if(chatFriendListService.modify(cfle) == 1) {
                     flag++;
                 } else {
@@ -131,6 +130,10 @@ public class ChatFriendController {
 
             }
         }
+
+        //设置其他关系中自己上线
+        chatFriendListService.modifyOnline(chatFriendListEntity);
+
         httpResponseEntity.setCode("200");
         httpResponseEntity.setMessage("上线成功");
         return httpResponseEntity;
@@ -173,6 +176,11 @@ public class ChatFriendController {
 
             }
         }
+
+        //设置其他关系中自己离线
+        chatFriendListService.modifyOffline(chatFriendListEntity);
+
+
         httpResponseEntity.setCode("200");
         httpResponseEntity.setMessage("离线成功");
         return httpResponseEntity;

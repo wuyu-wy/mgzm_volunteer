@@ -23,6 +23,14 @@ spring:
       # 文件请求的最大值
       max-request-size: 512MB
 
+
+#pagehelper分页配置 第二种和第三种不需要 重点讲的第一种需要
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+
 # 文件上传位置
 fileLocation: static/files
 

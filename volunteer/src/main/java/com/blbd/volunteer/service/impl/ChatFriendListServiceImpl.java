@@ -50,6 +50,36 @@ public class ChatFriendListServiceImpl implements ChatFriendListService {
         return chatFriendListEntityMapper.selectByLinkId(chatFriendListEntity);
     }
 
+
+    //用户上线，修改所有receiver为用户id的在线信息
+    public boolean modifyOnline(ChatFriendListEntity chatFriendListEntity) {
+        chatFriendListEntity.setReceiverId(chatFriendListEntity.getSenderId());
+        List<ChatFriendListEntity> list = chatFriendListEntityMapper.selectByReceiverId(chatFriendListEntity);
+        for(ChatFriendListEntity e: list) {
+            e.setReceiverIsOnline(1);
+            if(chatFriendListEntityMapper.modify(e) == 0) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    //用户下线，修改所有receiver为用户id的在线信息
+    public boolean modifyOffline(ChatFriendListEntity chatFriendListEntity) {
+        chatFriendListEntity.setReceiverId(chatFriendListEntity.getSenderId());
+        List<ChatFriendListEntity> list = chatFriendListEntityMapper.selectByReceiverId(chatFriendListEntity);
+        for(ChatFriendListEntity e: list) {
+            e.setReceiverIsOnline(0);
+            if(chatFriendListEntityMapper.modify(e) == 0) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
 }
 
 

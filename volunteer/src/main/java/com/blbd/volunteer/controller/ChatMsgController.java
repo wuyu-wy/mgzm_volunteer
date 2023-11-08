@@ -5,11 +5,16 @@ import com.blbd.volunteer.dao.entity.ChatMsgEntity;
 import com.blbd.volunteer.service.ChatFriendListService;
 import com.blbd.volunteer.service.ChatMsgService;
 import com.blbd.volunteer.utils.HttpResponseEntity;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.page.PageMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @CrossOrigin("*")
 @RestController
@@ -75,14 +80,21 @@ public class ChatMsgController {
     }
 
     /**
-     * //根据linkId查询双方消息，同时将对方最后一条消息设置为latest消息 参数中senderId为己方Id receiverId为对方Id
+     * 根据linkId查询双方消息，同时将对方最后一条消息设置为latest消息 参数中senderId为己方Id receiverId为对方Id,
+     * 查询完后设置己方（senderId）未读数归0
+     * 并设置对方最后一条消息为最新消息latest
      * @param chatMsgEntity
      * @return
      */
     @PostMapping(value = "/selectMsgByLinkId", headers = "Accept=application/json")
-    public HttpResponseEntity selectMsgByLinkId(@RequestBody ChatMsgEntity chatMsgEntity) {
+    public HttpResponseEntity selectMsgByLinkId(@RequestBody ChatMsgEntity chatMsgEntity,
+                                                @RequestParam("PageNum") Integer pageNum,
+                                                @RequestParam("PageSize") Integer pageSize) {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+
+        PageHelper.startPage(pageNum,pageSize);
         List<ChatMsgEntity> list = chatMsgService.selectMessageByLinkId(chatMsgEntity);
+        PageInfo<ChatMsgEntity> pageInfo = new PageInfo<>(list);
 
         //修改对方的最新消息标识位
         boolean flag = false;
@@ -106,11 +118,25 @@ public class ChatMsgController {
             }
         }
 
+        //设置己方unread归0
+        ChatFriendListEntity chatFriendListEntity = new ChatFriendListEntity();
+        chatFriendListEntity.setLinkId(chatMsgEntity.getLinkId());
+        List<ChatFriendListEntity> cFList = chatFriendListService.selectTwoListByLinkId(chatFriendListEntity);
+        for(ChatFriendListEntity cfle : cFList) {
+            if(cfle.getSenderId().equals(chatMsgEntity.getSenderId())) {
+                cfle.setUnread(0);
+                chatFriendListService.modify(cfle);
+            }
+        }
+
         //传输消息列表
         if(list.size() != 0) {
             httpResponseEntity.setCode("200");
             httpResponseEntity.setMessage("消息查询成功");
-            httpResponseEntity.setData(list);
+            Map resultMap = new ConcurrentHashMap();
+            resultMap.put("PageInfo", pageInfo);
+            resultMap.put("list",list);
+            httpResponseEntity.setData(resultMap);
         } else {
             httpResponseEntity.setCode("500");
             httpResponseEntity.setMessage("消息查询失败");

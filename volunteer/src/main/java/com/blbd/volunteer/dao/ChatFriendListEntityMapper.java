@@ -22,6 +22,8 @@ public interface ChatFriendListEntityMapper  {
     List<ChatFriendListEntity> selectBySenderId(ChatFriendListEntity chatFriendListEntity);
     List<ChatFriendListEntity> selectByLinkId(ChatFriendListEntity chatFriendListEntity);
 
+    List<ChatFriendListEntity> selectByReceiverId(ChatFriendListEntity chatFriendListEntity);
+
 }
 
 

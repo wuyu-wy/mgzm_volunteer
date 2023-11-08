@@ -139,7 +139,11 @@ public class WebSocketServer {
         //根据消息类型分别处理
         if (chatMsgEntity.getMsgType() == SocketConstants.MsgType.HEART_BEAT) {
             // 心跳消息
-            webSocketMap.get(userId).sendMessage("pong");
+            chatMsgEntity.setSenderId("SERVER");
+            chatMsgEntity.setReceiverId(userId);
+            chatMsgEntity.setMsgBody("pong");
+            webSocketMap.get(userId).sendMessage(JSON.toJSONString(chatMsgEntity));
+
         } else if (chatMsgEntity.getMsgType() == SocketConstants.MsgType.ONLINE) {
             log.info("登录消息，用户:" + chatMsgEntity.getSenderId() + "上线");
             userOnline(chatMsgEntity.getLinkId(), chatMsgEntity.getSenderId(), chatMsgEntity.getReceiverId());
@@ -179,6 +183,8 @@ public class WebSocketServer {
             //将消息以JSON格式传输给收方
             sendOneMessage( chatMsgEntity.getSenderId(), JSON.toJSONString(chatMsgEntity), chatMsgEntity.getReceiverId());
             saveMsg(chatMsgEntity);
+
+
         } else {
             log.error("消息类型错误");
         }
@@ -207,28 +213,28 @@ public class WebSocketServer {
             log.error("用户: "+receiverId+",不在线！");
         }
     }
-    /**
-     * 多人消息
-     * */
-    public void sendMoreMessage(String message, String[] userIds) throws IOException {
-        log.info("多人消息报文: "+message);
-        for (String id : userIds) {
-            if(webSocketMap.containsKey(id)){
-                webSocketMap.get(id).sendMessage(message);
-            }else{
-                log.error("用户: "+id+",不在线！");
-            }
-        }
-    }
-    /**
-     * 广播消息
-     * */
-    public void sendAllMessage(String message) throws IOException {
-        log.info("广播消息报文: "+message);
-        for (Map.Entry<String,WebSocketServer> entry : webSocketMap.entrySet()){
-            entry.getValue().sendMessage(message);
-        }
-    }
+//    /**
+//     * 多人消息
+//     * */
+//    public void sendMoreMessage(String message, String[] userIds) throws IOException {
+//        log.info("多人消息报文: "+message);
+//        for (String id : userIds) {
+//            if(webSocketMap.containsKey(id)){
+//                webSocketMap.get(id).sendMessage(message);
+//            }else{
+//                log.error("用户: "+id+",不在线！");
+//            }
+//        }
+//    }
+//    /**
+//     * 广播消息
+//     * */
+//    public void sendAllMessage(String message) throws IOException {
+//        log.info("广播消息报文: "+message);
+//        for (Map.Entry<String,WebSocketServer> entry : webSocketMap.entrySet()){
+//            entry.getValue().sendMessage(message);
+//        }
+//    }
 
     /**
      * 获取当前在线人数
@@ -268,14 +274,13 @@ public class WebSocketServer {
 
         int flag = 0; //falg =1 修改己方成功 =2 修改对方成功 =3修改双方成功
 
-        //双向设置己方上线,设置己方未读归0
+        //双向设置己方上线
         List<ChatFriendListEntity> list = chatFriendListService.selectTwoListByLinkId(chatFriendListEntity);
         for(ChatFriendListEntity cfle : list) {
             //好友列表根据senderId查询，所以前端列表senderId都为用户Id
             if(cfle.getSenderId().equals(chatFriendListEntity.getSenderId())) {
                 //己方的cfle 设置在线，未读归0
                 cfle.setSenderIsOnline(1);
-                cfle.setUnread(0);
                 if(chatFriendListService.modify(cfle) == 1) {
                     flag++;
                 } else {
@@ -304,6 +309,11 @@ public class WebSocketServer {
 
             }
         }
+
+        //设置其他关系中自己上线
+        chatFriendListService.modifyOnline(chatFriendListEntity);
+
+
         responseEntity.setCode("200");
         responseEntity.setMessage("上线成功");
         try {
@@ -312,6 +322,8 @@ public class WebSocketServer {
             throw new RuntimeException(e);
         }
     }
+
+
 
     /**
      * 用户下线时调用,修改数据库在线信息
@@ -364,6 +376,10 @@ public class WebSocketServer {
 
             }
         }
+
+        //设置其他关系中自己离线
+        chatFriendListService.modifyOffline(chatFriendListEntity);
+
         responseEntity.setCode("200");
         responseEntity.setMessage("离线成功");
         //响应客户端

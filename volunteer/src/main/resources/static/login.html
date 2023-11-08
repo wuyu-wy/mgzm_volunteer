@@ -6,10 +6,14 @@
 </head>
 <body>
 登录用户ID：<input type="text" id="sendUserId" /></br>
+收方用户ID：<input type="text" id="receiverId" /></br>
+LinkID：<input type="text" id="linkId" /></br>
 <button onclick="login()">登录</button>
 <script>
   function login() {
     sessionStorage.setItem("userId",document.getElementById("sendUserId").value);
+    sessionStorage.setItem("receiverId",document.getElementById("receiverId").value);
+    sessionStorage.setItem("linkId",document.getElementById("linkId").value);
     window.location.href="wss.html";
   }
 

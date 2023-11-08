@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.support.ScheduledMethodRunnable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 
@@ -154,7 +155,8 @@ public class WebSocketServer {
             /**
              * 先通过websocket发送消息到对方
              */
-            sendOneMessage( chatMsgEntity.getSenderId(), (String) chatMsgEntity.getMsgBody(), chatMsgEntity.getReceiverId());
+            //将消息以JSON格式传输给收方
+            sendOneMessage( chatMsgEntity.getSenderId(), JSON.toJSONString(chatMsgEntity), chatMsgEntity.getReceiverId());
             /**
              * 再将消息保存到数据库
              */
@@ -164,14 +166,19 @@ public class WebSocketServer {
             if (StringUtils.isBlank(chatMsgEntity.getSenderId())) {
                 throw new Exception("用户ID不能为空");
             }
-
+            //前端以ajax传输文件后获取ecFilePath后收集信息，ecFilePath作为MsgBody，包装成ChatMsgEntity用ws发送
+            //将消息以JSON格式传输给收方
+            sendOneMessage( chatMsgEntity.getSenderId(), JSON.toJSONString(chatMsgEntity), chatMsgEntity.getReceiverId());
+            saveMsg(chatMsgEntity);
 
         } else if (chatMsgEntity.getMsgType() == SocketConstants.MsgType.FILE) {
             if (StringUtils.isBlank(chatMsgEntity.getSenderId())) {
                 throw new Exception("用户ID不能为空");
             }
-
-
+            //前端以ajax传输文件获取ecFilePath后收集信息，ecFilePath作为MsgBody，包装成ChatMsgEntity用ws发送
+            //将消息以JSON格式传输给收方
+            sendOneMessage( chatMsgEntity.getSenderId(), JSON.toJSONString(chatMsgEntity), chatMsgEntity.getReceiverId());
+            saveMsg(chatMsgEntity);
         } else {
             log.error("消息类型错误");
         }

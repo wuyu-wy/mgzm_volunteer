@@ -16,6 +16,8 @@
         <result column="task_photo" jdbcType="VARCHAR" property="taskPhoto"/>
         <result column="child_name" jdbcType="VARCHAR" property="childName"/>
         <result column="task_name" jdbcType="VARCHAR" property="taskName"/>
+        <result column="task_video" jdbcType="VARCHAR" property="taskVideo"/>
+
     </resultMap>
 
 
@@ -33,6 +35,9 @@
             </if>
             <if test="homeworkPhoto != null">
                 homework_photo = #{homeworkPhoto},
+            </if>
+            <if test="taskVideo != null">
+                task_video = #{taskVideo},
             </if>
         </set>
         where task_id = #{taskId}
@@ -76,6 +81,9 @@
             </if>
             <if test="taskName != null">
                 task_name = #{taskName},
+            </if>
+            <if test="taskVideo != null">
+                task_video = #{taskVideo},
             </if>
         </set>
         where volunteer_Id = #{volunteerId} and child_id = #{childId} and task_id = #{taskId}

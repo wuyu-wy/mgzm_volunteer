@@ -88,18 +88,21 @@ public class VolunteerController {
             taskEntity.setId(task.getTaskId());
             TaskEntity newTaskEntity = taskService.selectTaskInfo(taskEntity);
 
+
             ChildEntity childEntity = new ChildEntity();
             childEntity.setId(task.getChildId());
             ChildEntity newChildEntity = childService.updateChildName(childEntity);
 
             TaskChildEntity taskChildEntity = new TaskChildEntity();
             taskChildEntity.setTaskId(task.getTaskId());
+            taskChildEntity.setChildId(task.getChildId());
             TaskChildEntity newTaskChildEntity = taskChildService.updatePhoto(taskChildEntity);
 
             task.setTaskName(newTaskEntity.getName());
             task.setTaskPhoto(newTaskEntity.getTaskPhoto());
             task.setChildName(newChildEntity.getName());
             task.setHomeworkPhoto(newTaskChildEntity.getHomeworkPhoto());
+            task.setTaskVideo(newTaskEntity.getVideo());
 
             taskVolunteerService.updateNew(task);
         }

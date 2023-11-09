@@ -18,4 +18,5 @@ public class TaskVolunteerEntity {
     private String taskPhoto;
     private String childName;
     private String taskName;
+    private String taskVideo;
 }

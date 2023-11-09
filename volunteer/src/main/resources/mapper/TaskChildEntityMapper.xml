@@ -11,7 +11,7 @@
     <select id="updatePhoto" resultType="com.blbd.volunteer.dao.entity.TaskChildEntity" resultMap="TaskChildMap">
         select homework_photo
         from task_child
-        where task_id = #{taskId,jdbcType=VARCHAR}
+        where task_id = #{taskId,jdbcType=VARCHAR} AND child_id = #{childId,jdbcType=VARCHAR}
     </select>
 
 

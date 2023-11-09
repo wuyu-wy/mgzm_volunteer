@@ -2,6 +2,8 @@ package com.blbd.volunteer.service;
 
 import com.blbd.volunteer.dao.entity.ChatFriendListEntity;
 
+import java.util.List;
+
 
 /**
 * @author 1185911254@qq.com
@@ -9,5 +11,25 @@ import com.blbd.volunteer.dao.entity.ChatFriendListEntity;
 * @createDate 2023-11-05 15:51:06
 */
 public interface ChatFriendListService {
+
+    //    添加至好友列表（双向添加）
+    int addFriendList(ChatFriendListEntity chatFriendListEntity);
+
+    //根据linkId删除好友列表（双向删除）
+    int deleteByLinkId(ChatFriendListEntity chatFriendListEntity);
+
+    //修改好友列表信息
+    int modify(ChatFriendListEntity chatFriendListEntity);
+
+    //通过用户id查询好友列表
+    List<ChatFriendListEntity> selectMyListBySenderId(ChatFriendListEntity chatFriendListEntity);
+
+    //通过linkId查询双向好友列表
+    List<ChatFriendListEntity> selectTwoListByLinkId(ChatFriendListEntity chatFriendListEntity);
+
+    //用户上线，修改所有receiver为用户id的在线信息
+    boolean modifyOnline(ChatFriendListEntity chatFriendListEntity);
+
+    boolean modifyOffline(ChatFriendListEntity chatFriendListEntity);
 
 }

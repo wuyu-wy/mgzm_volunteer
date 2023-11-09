@@ -55,6 +55,18 @@
         where sender_id = #{senderId}
     </select>
 
+    <select id="selectByLinkId" parameterType="chatFriendListEntity" resultMap="BaseResultMap" resultType="chatFriendListEntity">
+        select *
+        from mgzm.chat_friend_list
+        where link_id = #{linkId}
+    </select>
+
+    <select id="selectByReceiverId" parameterType="chatFriendListEntity" resultMap="BaseResultMap" resultType="chatFriendListEntity">
+        select *
+        from mgzm.chat_friend_list
+        where receiver_id = #{receiverId}
+    </select>
+
 
 
 </mapper>

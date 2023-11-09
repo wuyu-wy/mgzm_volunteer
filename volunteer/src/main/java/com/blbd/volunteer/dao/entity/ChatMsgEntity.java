@@ -21,8 +21,8 @@ public class ChatMsgEntity implements Serializable {
     private String linkId;
 
     /**
-     * 消息类型：0心跳 1登录 2文字 3图片 4文件
-     * HEART_BEAT,LOGIN,TEXT_MESSAGE,IMAGE,FILE
+     * 消息类型：0心跳 1上线 2文字 3图片 4文件
+     * HEART_BEAT,ONLINE,TEXT_MESSAGE,IMAGE,FILE
      */
     private Integer msgType;
 
@@ -49,7 +49,7 @@ public class ChatMsgEntity implements Serializable {
     /**
      * 是否为最后一条信息
      */
-    private Integer isLatest;
+    private Integer isLatest = 0;
 
     private static final long serialVersionUID = 1L;
 

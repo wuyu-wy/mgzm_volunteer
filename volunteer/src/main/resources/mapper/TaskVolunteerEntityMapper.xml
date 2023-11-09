@@ -90,7 +90,7 @@
     </update>
 
 
-    <!--对任务评价打分-志愿者-->
+    <!--对任务评价-志愿者-->
     <update id="evaluateTask" parameterType="taskVolunteerEntity">
         update mgzm.task_volunteer
         <set>

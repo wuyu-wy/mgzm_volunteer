@@ -1,15 +1,14 @@
 package com.blbd.volunteer.webSocket;
 
 public interface SocketConstants {
+
     /**
-     * 消息类型
+     * 消息类型：0心跳 1登录 2文字 3图片 4文件 5下线 6语音消息
+     * HEART_BEAT,LOGIN,TEXT_MESSAGE,IMAGE,FILE,OFFLINE,VOICE
+     *
      */
     interface MsgType {
-        /**
-         * 消息类型：0心跳 1登录 2文字 3图片 4文件 5下线
-         * HEART_BEAT,LOGIN,TEXT_MESSAGE,IMAGE,FILE,OFFLINE
-         *
-         */
+
         int HEART_BEAT = 0;
 
         int ONLINE = 1;
@@ -21,6 +20,8 @@ public interface SocketConstants {
         int FILE= 4;
 
         int OFFLINE = 5;
+
+        int VOICE = 6;
 
     }
 }

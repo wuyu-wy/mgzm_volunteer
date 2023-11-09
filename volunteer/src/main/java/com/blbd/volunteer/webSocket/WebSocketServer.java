@@ -136,6 +136,9 @@ public class WebSocketServer {
 
         //承接客户端message
         ChatMsgEntity chatMsgEntity = JSON.parseObject(message.getPayload(), ChatMsgEntity.class);
+        if (StringUtils.isBlank(chatMsgEntity.getSenderId())) {
+            throw new Exception("用户ID不能为空");
+        }
         //根据消息类型分别处理
         if (chatMsgEntity.getMsgType() == SocketConstants.MsgType.HEART_BEAT) {
             // 心跳消息
@@ -153,9 +156,6 @@ public class WebSocketServer {
             userOffline(chatMsgEntity.getLinkId(), chatMsgEntity.getSenderId(), chatMsgEntity.getReceiverId());
 
         } else if (chatMsgEntity.getMsgType() == SocketConstants.MsgType.TEXT_MESSAGE) {
-            if (StringUtils.isBlank(chatMsgEntity.getSenderId())) {
-                throw new Exception("用户ID不能为空");
-            }
             /**
              * 先通过websocket发送消息到对方
              */
@@ -167,24 +167,29 @@ public class WebSocketServer {
             saveMsg(chatMsgEntity);
 
         } else if (chatMsgEntity.getMsgType() == SocketConstants.MsgType.IMAGE) {
-            if (StringUtils.isBlank(chatMsgEntity.getSenderId())) {
-                throw new Exception("用户ID不能为空");
-            }
-            //前端以ajax传输文件后获取ecFilePath后收集信息，ecFilePath作为MsgBody，包装成ChatMsgEntity用ws发送
-            //将消息以JSON格式传输给收方
+            /**
+             * 前端以ajax传输文件后获取ecFilePath后收集文件路径，ecFilePath作为MsgBody，包装成ChatMsgEntity用ws发送
+             * 将消息以JSON格式传输给收方
+             */
             sendOneMessage( chatMsgEntity.getSenderId(), JSON.toJSONString(chatMsgEntity), chatMsgEntity.getReceiverId());
             saveMsg(chatMsgEntity);
 
         } else if (chatMsgEntity.getMsgType() == SocketConstants.MsgType.FILE) {
-            if (StringUtils.isBlank(chatMsgEntity.getSenderId())) {
-                throw new Exception("用户ID不能为空");
-            }
-            //前端以ajax传输文件获取ecFilePath后收集信息，ecFilePath作为MsgBody，包装成ChatMsgEntity用ws发送
-            //将消息以JSON格式传输给收方
+            /**
+             * 前端以ajax传输文件后获取ecFilePath后收集文件路径，ecFilePath作为MsgBody，包装成ChatMsgEntity用ws发送
+             * 将消息以JSON格式传输给收方
+             */
             sendOneMessage( chatMsgEntity.getSenderId(), JSON.toJSONString(chatMsgEntity), chatMsgEntity.getReceiverId());
             saveMsg(chatMsgEntity);
 
 
+        } else if (chatMsgEntity.getMsgType() == SocketConstants.MsgType.VOICE) {
+            /**
+             * 前端以ajax传输文件后获取ecFilePath后收集文件路径，ecFilePath作为MsgBody，包装成ChatMsgEntity用ws发送
+             * 将消息以JSON格式传输给收方
+             */
+            sendOneMessage( chatMsgEntity.getSenderId(), JSON.toJSONString(chatMsgEntity), chatMsgEntity.getReceiverId());
+            saveMsg(chatMsgEntity);
         } else {
             log.error("消息类型错误");
         }
@@ -293,9 +298,8 @@ public class WebSocketServer {
                     }
                 }
             } else {
-                //对方的cfle 设置己方在线
-                cfle.setReceiverIsOnline(1);
-                if(chatFriendListService.modify(cfle) == 1) {
+                //所有得对方的cfle 设置己方在线
+                if(chatFriendListService.modifyOnline(chatFriendListEntity)) {
                     flag++;
                 } else {
                     responseEntity.setCode("500");
@@ -310,8 +314,8 @@ public class WebSocketServer {
             }
         }
 
-        //设置其他关系中自己上线
-        chatFriendListService.modifyOnline(chatFriendListEntity);
+
+
 
 
         responseEntity.setCode("200");
@@ -359,9 +363,8 @@ public class WebSocketServer {
                     }
                 }
             } else {
-                //对方的cfle 设置己方在线
-                cfle.setReceiverIsOnline(0);
-                if(chatFriendListService.modify(cfle) == 1) {
+                //列表中所有对方的cfle 设置己方在线
+                if(chatFriendListService.modifyOffline(chatFriendListEntity)) {
                     flag++;
                 } else {
                     responseEntity.setCode("500");
@@ -377,8 +380,6 @@ public class WebSocketServer {
             }
         }
 
-        //设置其他关系中自己离线
-        chatFriendListService.modifyOffline(chatFriendListEntity);
 
         responseEntity.setCode("200");
         responseEntity.setMessage("离线成功");

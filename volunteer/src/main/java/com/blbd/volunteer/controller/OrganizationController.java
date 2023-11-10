@@ -32,15 +32,17 @@ public class OrganizationController {
     }
 
 
-    //查询组织信息根据姓名，但不是模糊
-    @PostMapping(value = "/selectByOrganizationName", headers = "Accept=application/json")
-    public List<OrganizationEntity> selectByOrganizationName (@RequestBody OrganizationEntity organizationEntity){
-        return organizationService.selectByOrganizationName(organizationEntity);
-    }
+//    //查询组织信息根据姓名，但不是模糊
+//    @PostMapping(value = "/selectByOrganizationName", headers = "Accept=application/json")
+//    public List<OrganizationEntity> selectByOrganizationName (@RequestBody OrganizationEntity organizationEntity){
+//        return organizationService.selectByOrganizationName(organizationEntity);
+//    }
 
     //查询组织信息根据姓名,模糊加分页
     @GetMapping(value = "selectByOrgName", headers = "Accept=application/json")
-    public List<OrganizationEntity> selectByOrgName(@RequestParam Integer curPage,@RequestParam Integer pageSize,@RequestBody OrganizationEntity organizationEntity){
+    public List<OrganizationEntity> selectByOrgName(@RequestParam Integer curPage,@RequestParam Integer pageSize,@RequestBody String name){
+        OrganizationEntity organizationEntity = new OrganizationEntity();
+        organizationEntity.setOrgName(name);
         return organizationService.selectByOrgName(curPage, pageSize,organizationEntity);
     }
 

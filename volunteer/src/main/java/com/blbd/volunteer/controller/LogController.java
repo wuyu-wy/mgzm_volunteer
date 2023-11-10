@@ -31,7 +31,10 @@ public class LogController {
 
     //删除日志
     @PostMapping(value = "/delete", headers = "Accept=application/json")
-    public int deleteLog(@RequestBody LogEntity logEntity){return logService.deleteByLogId(logEntity);}
+    public int deleteLog(@RequestBody String logId){
+        LogEntity logEntity = new LogEntity();
+        logEntity.setLogId(logId);
+        return logService.deleteByLogId(logEntity);}
 
     //查找志愿者Id对应的日志
     @GetMapping(value = "selectByVolunteerId", headers = "Accept=application/json")

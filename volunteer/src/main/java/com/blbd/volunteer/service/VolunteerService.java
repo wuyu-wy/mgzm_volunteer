@@ -20,22 +20,22 @@ public interface VolunteerService {
     int registerVolunteer(VolunteerEntity volunteerEntity);
 
     //志愿者查询
-    List<VolunteerEntity> queryVolunteer(String username);
+    List<VolunteerEntity> queryVolunteer(String id);
 
     //志愿者修改
     int updateVolunteer(VolunteerEntity volunteerEntity);
 
     //志愿者加入组织
-    int joinOrg(VolunteerEntity volunteerEntity);
+    int joinOrg(String volId , String OrgName);
 
     //志愿者退出组织
-    int outOrg(VolunteerEntity volunteerEntity);
+    int outOrg(String volId);
 
     //志愿者查询未完成任务
     List<TaskVolunteerEntity> selectTask(VolunteerEntity volunteerEntity);
 
     //志愿者模糊查询未完成任务
-    List<TaskVolunteerEntity> searchTask(VolunteerEntity volunteerEntity);
+    List<TaskVolunteerEntity> searchTask(VolunteerEntity volunteerEntity ,String taskName);
 
     //志愿者查看某一详细任务
     TaskVolunteerEntity selectOneTask(TaskVolunteerEntity taskVolunteerEntity);
@@ -44,7 +44,7 @@ public interface VolunteerService {
     int evaluateTask(TaskVolunteerEntity taskVolunteerEntity);
 
     //志愿者模糊查询已完成任务
-    List<TaskVolunteerEntity> finishSearchTask(VolunteerEntity volunteerEntity);
+    List<TaskVolunteerEntity> finishSearchTask(VolunteerEntity volunteerEntity, String taskName);
 
 
     //志愿者查询已完成任务

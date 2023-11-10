@@ -39,7 +39,7 @@
         select vol_id, vol_username, vol_password, vol_name, vol_locate,
                vol_organization, vol_duty, vol_corrected_tasks, vol_tel, vol_sfz, if_pass
         from volunteer
-        where vol_username = #{volUsername,jdbcType=VARCHAR} and vol_password = #{volPassword,jdbcType=VARCHAR}
+        where vol_id = #{volId,jdbcType=VARCHAR}
     </select>
 
 
@@ -68,7 +68,7 @@
             <if test="volSfz != null">vol_sfz = #{volSfz,jdbcType=VARCHAR}</if>
             <if test="ifPass != null">if_pass = #{ifPass,jdbcType=VARCHAR}</if>
         </set>
-        where vol_username = #{volUsername,jdbcType=VARCHAR}
+        where vol_id = #{volId,jdbcType=VARCHAR}
     </update>
 
 

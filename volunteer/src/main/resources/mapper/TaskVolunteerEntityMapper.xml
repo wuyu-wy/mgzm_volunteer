@@ -119,7 +119,7 @@
     <select id="search" parameterType="taskVolunteerEntity" resultType="arraylist" resultMap="TaskVolunteerMap">
         select *
         from mgzm.task_volunteer
-        where task_name like CONCAT('%', #{taskName}, '%') AND is_completed_approval = 0
+        where task_name like CONCAT('%', #{taskName}, '%') AND is_completed_approval = 0 AND volunteer_Id = #{volunteerId}
     </select>
 
     <!--查询已完成任务-->
@@ -133,7 +133,7 @@
     <select id="finishSearchTask" parameterType="taskVolunteerEntity" resultType="arraylist" resultMap="TaskVolunteerMap">
         select *
         from mgzm.task_volunteer
-        where task_name like CONCAT('%', #{taskName}, '%') AND is_completed_approval != 0
+        where task_name like CONCAT('%', #{taskName}, '%') AND volunteer_Id = #{volunteerId} AND is_completed_approval != 0
     </select>
 
 
@@ -141,7 +141,7 @@
     <select id="selectOne" parameterType="taskVolunteerEntity" resultType="arraylist" resultMap="TaskVolunteerMap">
         select *
         from mgzm.task_volunteer
-        where  task_id = #{taskId}
+        where  task_id = #{taskId} AND volunteer_Id = #{volunteerId}
     </select>
 
 

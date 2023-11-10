@@ -107,7 +107,7 @@ public class VolunteerController {
             task.setTaskName(newTaskEntity.getName());
             task.setTaskPhoto(newTaskEntity.getTaskPhoto());
             task.setChildName(newChildEntity.getName());
-            task.setHomeworkPhoto("http://47.116.65.252:9000/taskchild/" +newTaskChildEntity.getHomeworkPhoto());
+            task.setHomeworkPhoto("http://47.116.65.252:9000/taskchild/"+newTaskChildEntity.getHomeworkPhoto());
             task.setTaskVideo(newTaskEntity.getVideo());
 
             taskVolunteerService.updateNew(task);

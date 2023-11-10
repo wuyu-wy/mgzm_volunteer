@@ -108,7 +108,7 @@
             <if test="approvalComments != null">
                 approval_comments = #{approvalComments},
             </if>
-            <if test="get_score != null">
+            <if test="getScore != null">
                 get_score = #{getScore},
             </if>
         </set>

@@ -9,8 +9,8 @@ public class TaskChildEntity {
     private String taskId;
     private String homeworkPhoto;
     private byte correct;
-
-    private int score;
+    private int scores;
+    private String comment;
 
 
 

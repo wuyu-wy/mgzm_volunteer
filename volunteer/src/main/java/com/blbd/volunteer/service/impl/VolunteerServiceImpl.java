@@ -172,18 +172,21 @@ public class VolunteerServiceImpl implements VolunteerService {
         taskChildEntity.setChildId(taskVolunteerEntity.getChildId());
         taskChildEntity.setTaskId(taskVolunteerEntity.getTaskId());
         taskChildEntity.setCorrect(taskVolunteerEntity.getIsCompletedApproval());
+        taskChildEntity.setComment(taskVolunteerEntity.getApprovalComments());
 
         taskChildEntityMapper.correct(taskChildEntity);
 
         TaskChildEntity aa = new TaskChildEntity();
 
         aa = taskChildEntityMapper.updatePhoto(taskChildEntity);
-        int score = aa.getScore();
+        int score = aa.getScores();
+        System.out.println("sswhhhhh"+  score);
 
 
         ChildEntity ss = new ChildEntity();
-        ss.setId(taskVolunteerEntity.getTaskId());
+        ss.setId(taskVolunteerEntity.getChildId());
         ChildEntity ans = childEntityMapper.searchScore(ss);
+        System.out.println("sssswww222" + ans.getScore());
 
         ChildEntity childEntity = new ChildEntity();
         childEntity.setId(taskVolunteerEntity.getChildId());

@@ -62,10 +62,10 @@ public class VolunteerServiceImpl implements VolunteerService {
 
     //志愿者信息查询
     @Override
-    public List<VolunteerEntity> queryVolunteer(String username) {
+    public List<VolunteerEntity> queryVolunteer(String id) {
 
         VolunteerEntity volunteerEntity = new VolunteerEntity();
-        volunteerEntity.setVolUsername(username);
+        volunteerEntity.setVolUsername(id);
 
         List<VolunteerEntity> queryVolunteerInfo = volunteerEntityMapper.selectVolunteerInfo(volunteerEntity);
 
@@ -83,7 +83,12 @@ public class VolunteerServiceImpl implements VolunteerService {
 
     //志愿者加入组织
     @Override
-    public int joinOrg(VolunteerEntity volunteerEntity) {
+    public int joinOrg(String volId , String OrgName) {
+        VolunteerEntity aa = new VolunteerEntity();
+        aa.setVolId(volId);
+        VolunteerEntity volunteerEntity = volunteerEntityMapper.selectVolunteerById(aa);
+        volunteerEntity.setVolOrganization(OrgName);
+
 
         volunteerEntityMapper.updateVolunteer(volunteerEntity);
 
@@ -101,7 +106,11 @@ public class VolunteerServiceImpl implements VolunteerService {
 
     //志愿者退出组织
     @Override
-    public int outOrg(VolunteerEntity volunteerEntity) {
+    public int outOrg(String volId) {
+
+        VolunteerEntity aa = new VolunteerEntity();
+        aa.setVolId(volId);
+        VolunteerEntity volunteerEntity = volunteerEntityMapper.selectVolunteerById(aa);
 
         volunteerEntity.setVolOrganization(null);
         volunteerEntityMapper.updateVolunteer(volunteerEntity);
@@ -127,10 +136,11 @@ public class VolunteerServiceImpl implements VolunteerService {
 
     //志愿者模糊查询未完成任务
     @Override
-    public List<TaskVolunteerEntity> searchTask(VolunteerEntity volunteerEntity) {
+    public List<TaskVolunteerEntity> searchTask(VolunteerEntity volunteerEntity, String taskName) {
 
         TaskVolunteerEntity taskvolunteerEntity = new TaskVolunteerEntity();
         taskvolunteerEntity.setVolunteerId(volunteerEntity.getVolId());
+        taskvolunteerEntity.setTaskName(taskName);
         return taskVolunteerEntityMapper.search(taskvolunteerEntity);
     }
 
@@ -154,7 +164,6 @@ public class VolunteerServiceImpl implements VolunteerService {
         newvolunteerEntity.setVolCorrectedTasks(newvolunteerEntity.getVolCorrectedTasks() + 1);
         volunteerEntityMapper.updateVolunteer(newvolunteerEntity);
 
-
         taskVolunteerEntity.setApprovalFinishTime(UUIDUtil.getCurrentTime());
 
         return taskVolunteerEntityMapper.evaluateTask(taskVolunteerEntity);
@@ -170,10 +179,11 @@ public class VolunteerServiceImpl implements VolunteerService {
 
     @Override
     //志愿者查询已完成的信息，模糊搜索
-    public List<TaskVolunteerEntity> finishSearchTask(VolunteerEntity volunteerEntity) {
+    public List<TaskVolunteerEntity> finishSearchTask(VolunteerEntity volunteerEntity ,String taskName) {
 
         TaskVolunteerEntity taskvolunteerEntity = new TaskVolunteerEntity();
         taskvolunteerEntity.setVolunteerId(volunteerEntity.getVolId());
+        taskvolunteerEntity.setTaskName(taskName);
         return taskVolunteerEntityMapper.finishSearchTask(taskvolunteerEntity);
     }
 

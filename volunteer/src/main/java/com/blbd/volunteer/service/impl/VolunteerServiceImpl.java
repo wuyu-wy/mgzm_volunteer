@@ -87,6 +87,9 @@ public class VolunteerServiceImpl implements VolunteerService {
         VolunteerEntity aa = new VolunteerEntity();
         aa.setVolId(volId);
         VolunteerEntity volunteerEntity = volunteerEntityMapper.selectVolunteerById(aa);
+        if(volunteerEntity.getVolOrganization()!= null){
+            return 0;
+        }
         volunteerEntity.setVolOrganization(OrgName);
 
 

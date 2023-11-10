@@ -73,7 +73,12 @@ public class WebSocketServer {
         }
         log.info("用户连接: "+userId+",当前在线人数为: " + getOnlineCount());
         try {
-            sendMessage("连接成功");
+            ChatMsgEntity chatMsgEntity = new ChatMsgEntity();
+            chatMsgEntity.setSenderId("SERVER");
+            chatMsgEntity.setReceiverId(userId);
+            chatMsgEntity.setMsgBody("连接成功");
+            webSocketMap.get(userId).sendMessage(JSON.toJSONString(chatMsgEntity));
+            sendMessage(JSON.toJSONString(chatMsgEntity));
         } catch (IOException e) {
             log.error("用户: "+userId+",网络异常!!!!!!");
         }
@@ -201,7 +206,7 @@ public class WebSocketServer {
      * getAsyncRemote：是非阻塞式的
      * getBasicRemote：是阻塞式的
      */
-    public void sendMessage(String message) throws IOException {
+    public synchronized void sendMessage(String message) throws IOException {
         this.session.getBasicRemote().sendText(message);//同步消息
 //        this.session.getAsyncRemote().sendText(message);//异步消息
     }
@@ -313,11 +318,6 @@ public class WebSocketServer {
 
             }
         }
-
-
-
-
-
         responseEntity.setCode("200");
         responseEntity.setMessage("上线成功");
         try {

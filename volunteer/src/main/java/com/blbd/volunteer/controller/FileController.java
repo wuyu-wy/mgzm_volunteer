@@ -21,7 +21,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -66,10 +68,11 @@ public class FileController {
         String ecFilePath = java.net.URLEncoder.encode(realPath+"/"+fileName,"UTF-8");
 
         //返回使用utf-8来编码后的文件路径
-        Map path = new ConcurrentHashMap<String,String>();
-        path.put("ecFilePath",ecFilePath);
+        Map<String,String> pathMap = new ConcurrentHashMap<>();
+        pathMap.put("ecFilePath",ecFilePath);
 
-        return JSON.toJSON(path);
+        log.info("ecFIlePath:" + ecFilePath);
+        return JSON.toJSON(pathMap);
     }
 
 

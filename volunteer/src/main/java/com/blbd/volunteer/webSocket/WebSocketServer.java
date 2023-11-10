@@ -18,6 +18,8 @@ import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -99,7 +101,7 @@ public class WebSocketServer {
     }
 
     /**
-     * 收到客户端消息时执行
+     * 收到客户端String消息时执行
      *
      * @param message 客户端发送过来的消息*/
     @OnMessage
@@ -120,6 +122,40 @@ public class WebSocketServer {
             }
         }
     }
+
+    /**
+     * 收到客户端二进制流消息时执行
+     *
+     * @param messages 客户端发送过来的消息*/
+    @OnMessage
+    public void onMessage(byte[] messages, Session session) {
+        String messageString;
+        try {
+            messageString = new String(messages,"utf-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+        log.info("当前用户二进制消息: "+userId+"，报文: "+ messageString);
+        //返回信息
+
+        if(StringUtils.isNotBlank(messageString)){
+            try {
+                //传送给对应userId用户的websocket, 如果userId不为空 并且 webSocketMap种包含userId 才会发送消息
+                if(StringUtils.isNotBlank(userId) && webSocketMap.containsKey(userId)){
+                    //处理用户发来的消息
+                    handleMessage(session, new TextMessage(messageString));
+                }else{
+                    //否则不在这个服务器上
+                    log.error("请求的userId："+userId+" 不在该服务器上");
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+
 
     /**
      * 链接异常时执行

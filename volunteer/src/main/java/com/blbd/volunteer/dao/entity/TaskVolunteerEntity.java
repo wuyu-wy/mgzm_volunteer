@@ -19,4 +19,5 @@ public class TaskVolunteerEntity {
     private String childName;
     private String taskName;
     private String taskVideo;
+    private int getScore;
 }

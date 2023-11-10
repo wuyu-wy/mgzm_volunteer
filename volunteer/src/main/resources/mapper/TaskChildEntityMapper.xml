@@ -6,13 +6,24 @@
         <id column="task_id" jdbcType="VARCHAR" property="taskId" />
         <result column="child_id" jdbcType="VARCHAR" property="childId" />
         <result column="homework_photo" jdbcType="VARCHAR" property="homeworkPhoto" />
+        <result column="is_corrected" jdbcType="TINYINT" property="correct" />
+        <result column="score" jdbcType="INTEGER" property="score" />
     </resultMap>
 
     <select id="updatePhoto" resultType="com.blbd.volunteer.dao.entity.TaskChildEntity" resultMap="TaskChildMap">
-        select homework_photo
+        select homework_photo, score
         from task_child
         where task_id = #{taskId,jdbcType=VARCHAR} AND child_id = #{childId,jdbcType=VARCHAR}
     </select>
+
+
+    <update id="correct" parameterType="com.blbd.volunteer.dao.entity.TaskChildEntity">
+        update task_child
+        <set>
+            <if test="correct != null">is_corrected = #{correct,jdbcType=VARCHAR},</if>
+        </set>
+        where task_id = #{taskId,jdbcType=VARCHAR} AND child_id = #{childId,jdbcType=VARCHAR}
+    </update>
 
 
 

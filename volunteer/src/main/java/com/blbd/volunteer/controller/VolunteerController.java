@@ -103,10 +103,11 @@ public class VolunteerController {
             taskChildEntity.setChildId(task.getChildId());
             TaskChildEntity newTaskChildEntity = taskChildService.updatePhoto(taskChildEntity);
 
+
             task.setTaskName(newTaskEntity.getName());
             task.setTaskPhoto(newTaskEntity.getTaskPhoto());
             task.setChildName(newChildEntity.getName());
-            task.setHomeworkPhoto(newTaskChildEntity.getHomeworkPhoto());
+            task.setHomeworkPhoto("http://47.116.65.252:9000/taskchild/" +newTaskChildEntity.getHomeworkPhoto());
             task.setTaskVideo(newTaskEntity.getVideo());
 
             taskVolunteerService.updateNew(task);
@@ -127,14 +128,18 @@ public class VolunteerController {
 
     //志愿者评价并打分
     @PostMapping(value = "/evaluateTask", headers = "Accept=application/json")
-    public int evaluateTask(@RequestParam String id, @RequestParam String task_id, @RequestParam byte point, @RequestParam String comment){
+    public int evaluateTask(@RequestParam String id, @RequestParam String task_id,@RequestParam String childId, @RequestParam byte point, @RequestParam String comment,@RequestParam int getScore){
         TaskVolunteerEntity taskVolunteerEntity = new TaskVolunteerEntity();
         taskVolunteerEntity.setVolunteerId(id);
         taskVolunteerEntity.setTaskId(task_id);
+        taskVolunteerEntity.setChildId(childId);
         taskVolunteerEntity.setIsCompletedApproval(point);
         taskVolunteerEntity.setApprovalComments(comment);
+        taskVolunteerEntity.setGetScore(getScore);
         return volunteerService.evaluateTask(taskVolunteerEntity);
     }
+
+
 
     //未完成任务模糊查询显示,根据taskName
     @PostMapping(value = "/searchTask", headers = "Accept=application/json")

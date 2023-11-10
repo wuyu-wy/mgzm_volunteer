@@ -8,6 +8,9 @@ public class TaskChildEntity {
     private String childId;
     private String taskId;
     private String homeworkPhoto;
+    private byte correct;
+
+    private int score;
 
 
 

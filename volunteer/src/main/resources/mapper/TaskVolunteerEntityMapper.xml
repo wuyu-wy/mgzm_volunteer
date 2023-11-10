@@ -17,6 +17,7 @@
         <result column="child_name" jdbcType="VARCHAR" property="childName"/>
         <result column="task_name" jdbcType="VARCHAR" property="taskName"/>
         <result column="task_video" jdbcType="VARCHAR" property="taskVideo"/>
+        <result column="get_score" jdbcType="INTEGER" property="getScore"/>
 
     </resultMap>
 
@@ -40,7 +41,7 @@
                 task_video = #{taskVideo},
             </if>
         </set>
-        where task_id = #{taskId}
+        where task_id = #{taskId} AND child_id = #{childId}
     </update>
 
     
@@ -85,8 +86,11 @@
             <if test="taskVideo != null">
                 task_video = #{taskVideo},
             </if>
+            <if test="get_score != null">
+                get_score = #{getScore},
+            </if>
         </set>
-        where volunteer_Id = #{volunteerId} and child_id = #{childId} and task_id = #{taskId}
+        where volunteer_Id = #{volunteerId} AND child_id = #{childId} AND task_id = #{taskId}
     </update>
 
 
@@ -104,8 +108,11 @@
             <if test="approvalComments != null">
                 approval_comments = #{approvalComments},
             </if>
+            <if test="get_score != null">
+                get_score = #{getScore},
+            </if>
         </set>
-        where task_id = #{taskId}
+        where  task_id = #{taskId} AND child_id = #{childId}
     </update>
 
     <!--查询未完成任务-->

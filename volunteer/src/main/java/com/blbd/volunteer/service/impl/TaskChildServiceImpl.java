@@ -18,4 +18,8 @@ public class TaskChildServiceImpl implements TaskChildService {
     public TaskChildEntity updatePhoto(TaskChildEntity taskChildEntity){
         return taskChildEntityMapper.updatePhoto(taskChildEntity);
     }
+
+    public int correct(TaskChildEntity taskChildEntity){
+        return taskChildEntityMapper.correct(taskChildEntity);
+    }
 }

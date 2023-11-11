@@ -12,4 +12,6 @@ public interface TaskChildEntityMapper {
 
     TaskChildEntity updatePhoto(TaskChildEntity taskChildEntity);
 
+    int correct(TaskChildEntity taskChildEntity);
+
 }

@@ -66,7 +66,7 @@
             <if test="volDuty != null">vol_duty = #{volDuty,jdbcType=INTEGER},</if>
             <if test="volCorrectedTasks != null">vol_corrected_tasks = #{volCorrectedTasks,jdbcType=INTEGER},</if>
             <if test="volSfz != null">vol_sfz = #{volSfz,jdbcType=VARCHAR}</if>
-            <if test="ifPass != null">if_pass = #{ifPass,jdbcType=VARCHAR}</if>
+
         </set>
         where vol_id = #{volId,jdbcType=VARCHAR}
     </update>

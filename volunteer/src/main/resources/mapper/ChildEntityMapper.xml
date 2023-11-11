@@ -5,6 +5,7 @@
     <resultMap id="ChildMap" type="com.blbd.volunteer.dao.entity.ChildEntity">
         <id column="id" jdbcType="VARCHAR" property="id" />
         <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="score" jdbcType="INTEGER" property="score" />
     </resultMap>
 
     <select id="updateChildName" resultType="com.blbd.volunteer.dao.entity.TaskChildEntity" resultMap="ChildMap">
@@ -12,6 +13,21 @@
         from child
         where id = #{id,jdbcType=VARCHAR}
     </select>
+
+    <select id="searchScore" resultType="com.blbd.volunteer.dao.entity.TaskChildEntity" resultMap="ChildMap">
+        select score
+        from child
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <update id="updateScore" parameterType="com.blbd.volunteer.dao.entity.TaskChildEntity">
+        update child
+        <set>
+            <if test="score != null">score = #{score,jdbcType=VARCHAR},</if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
 
 
 

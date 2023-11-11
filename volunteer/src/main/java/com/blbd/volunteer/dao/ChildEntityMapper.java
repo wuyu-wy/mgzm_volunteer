@@ -12,4 +12,8 @@ public interface ChildEntityMapper {
 
     ChildEntity updateChildName(ChildEntity childEntity);
 
+    ChildEntity searchScore(ChildEntity childEntity);
+
+    int updateScore(ChildEntity childEntity);
+
 }

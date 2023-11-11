@@ -1,11 +1,7 @@
 package com.blbd.volunteer.service.impl;
 
-import com.blbd.volunteer.dao.OrganizationEntityMapper;
-import com.blbd.volunteer.dao.TaskVolunteerEntityMapper;
-import com.blbd.volunteer.dao.VolunteerEntityMapper;
-import com.blbd.volunteer.dao.entity.OrganizationEntity;
-import com.blbd.volunteer.dao.entity.TaskVolunteerEntity;
-import com.blbd.volunteer.dao.entity.VolunteerEntity;
+import com.blbd.volunteer.dao.*;
+import com.blbd.volunteer.dao.entity.*;
 import com.blbd.volunteer.service.TaskChildService;
 import com.blbd.volunteer.service.VolunteerService;
 import com.blbd.volunteer.utils.UUIDUtil;
@@ -24,7 +20,11 @@ public class VolunteerServiceImpl implements VolunteerService {
 
     @Autowired
     private TaskVolunteerEntityMapper taskVolunteerEntityMapper;
+    @Autowired
+    private TaskChildEntityMapper taskChildEntityMapper;
 
+    @Autowired
+    private ChildEntityMapper childEntityMapper;
 
     //志愿者登录
     @Override
@@ -166,8 +166,33 @@ public class VolunteerServiceImpl implements VolunteerService {
         newvolunteerEntity.setVolDuty(newvolunteerEntity.getVolDuty() -1);
         newvolunteerEntity.setVolCorrectedTasks(newvolunteerEntity.getVolCorrectedTasks() + 1);
         volunteerEntityMapper.updateVolunteer(newvolunteerEntity);
-
         taskVolunteerEntity.setApprovalFinishTime(UUIDUtil.getCurrentTime());
+
+        TaskChildEntity taskChildEntity = new TaskChildEntity();
+        taskChildEntity.setChildId(taskVolunteerEntity.getChildId());
+        taskChildEntity.setTaskId(taskVolunteerEntity.getTaskId());
+        taskChildEntity.setCorrect(taskVolunteerEntity.getIsCompletedApproval());
+        taskChildEntity.setComment(taskVolunteerEntity.getApprovalComments());
+
+        taskChildEntityMapper.correct(taskChildEntity);
+
+        TaskChildEntity aa = new TaskChildEntity();
+
+        aa = taskChildEntityMapper.updatePhoto(taskChildEntity);
+        int score = aa.getScores();
+        System.out.println("sswhhhhh"+  score);
+
+
+        ChildEntity ss = new ChildEntity();
+        ss.setId(taskVolunteerEntity.getChildId());
+        ChildEntity ans = childEntityMapper.searchScore(ss);
+        System.out.println("sssswww222" + ans.getScore());
+
+        ChildEntity childEntity = new ChildEntity();
+        childEntity.setId(taskVolunteerEntity.getChildId());
+        childEntity.setScore(ans.getScore() + score);
+
+        childEntityMapper.updateScore(childEntity);
 
         return taskVolunteerEntityMapper.evaluateTask(taskVolunteerEntity);
     }

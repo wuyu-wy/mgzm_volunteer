@@ -52,11 +52,14 @@ class VolunteerApplicationTests {
     //查询志愿者信息，测试成功
     @Test
     public void testSelectVolunteer(){
-        VolunteerEntity volunteerEntity = new VolunteerEntity();
-        volunteerEntity.setVolUsername("wuhao");
-        volunteerEntity.setVolPassword("123456");
-        List<VolunteerEntity> rowsSelected = volunteerEntityMapper.selectVolunteerInfo(volunteerEntity);
-        System.out.println(rowsSelected);
+        TaskVolunteerEntity taskVolunteerEntity = new TaskVolunteerEntity();
+        taskVolunteerEntity.setVolunteerId("1");
+        taskVolunteerEntity.setTaskId("2");
+        taskVolunteerEntity.setChildId("1");
+        taskVolunteerEntity.setIsCompletedApproval((byte) 1);
+        taskVolunteerEntity.setApprovalComments("完成很好，吴昊说的");
+        taskVolunteerEntity.setGetScore(100);
+        volunteerService.evaluateTask(taskVolunteerEntity);
 
     }
 
@@ -133,7 +136,7 @@ class VolunteerApplicationTests {
             task.setTaskName(newTaskEntity.getName());
             task.setTaskPhoto(newTaskEntity.getTaskPhoto());
             task.setChildName(newChildEntity.getName());
-            task.setHomeworkPhoto(newTaskChildEntity.getHomeworkPhoto());
+            task.setHomeworkPhoto("http://47.116.65.252:9000/taskchild/" +newTaskChildEntity.getHomeworkPhoto());
             task.setTaskVideo(newTaskEntity.getVideo());
 
             taskVolunteerService.updateNew(task);

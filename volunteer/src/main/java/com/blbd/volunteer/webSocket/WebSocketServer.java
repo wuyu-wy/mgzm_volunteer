@@ -87,6 +87,9 @@ public class WebSocketServer {
      */
     @OnClose
     public void onClose() {
+        webSocketUtils.userOffline(userId);
+        log.error("用户：" + userId + " 因断开WebSOcket连接下线");
+
         if(webSocketMap.containsKey(userId)){
             //将当前用户在集合中删除
             webSocketMap.remove(userId);
@@ -159,6 +162,8 @@ public class WebSocketServer {
     @OnError
     public void onError(Session session, Throwable error) {
         log.error("用户错误:"+this.userId+",原因:"+error.getMessage());
+        webSocketUtils.userOffline(userId);
+        log.error("用户：" + userId + " 因错误强制下线");
         error.printStackTrace();
     }
 
@@ -180,13 +185,13 @@ public class WebSocketServer {
         } else if (chatMsgEntity.getMsgType() == SocketConstants.MsgType.ONLINE) {
             log.info("登录消息，用户:" + chatMsgEntity.getSenderId() + "上线");
             //调用工具类中用户上线方法
-            ResponseEntity responseEntity = webSocketUtils.userOnline(chatMsgEntity.getLinkId(), chatMsgEntity.getSenderId(), chatMsgEntity.getReceiverId());
+            ResponseEntity responseEntity = webSocketUtils.userOnline(chatMsgEntity.getSenderId());
             sendServerMessage(JSON.toJSONString(responseEntity));
 
         } else if (chatMsgEntity.getMsgType() == SocketConstants.MsgType.OFFLINE) {
             log.info("离线消息，用户:" + chatMsgEntity.getSenderId() + "离线");
             //调用工具类中用户离线方法
-            ResponseEntity responseEntity = webSocketUtils.userOffline(chatMsgEntity.getLinkId(), chatMsgEntity.getSenderId(), chatMsgEntity.getReceiverId());
+            ResponseEntity responseEntity = webSocketUtils.userOffline(chatMsgEntity.getSenderId());
             sendServerMessage(JSON.toJSONString(responseEntity));
 
         } else if (chatMsgEntity.getMsgType() == SocketConstants.MsgType.TEXT_MESSAGE) {

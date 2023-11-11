@@ -35,100 +35,49 @@ public class WebSocketUtils {
 
     /**
      * 用户上线时调用，修改数据库在线信息，清空未读信息
-     * @param linkId
+     *
      * @param senderId
-     * @param receiverId
+     *
      */
-    public ResponseEntity userOnline(String linkId, String senderId, String receiverId) {
+    public ResponseEntity userOnline(String senderId) {
         ResponseEntity responseEntity = new ResponseEntity();
         ChatFriendListEntity chatFriendListEntity = new ChatFriendListEntity();
-        chatFriendListEntity.setLinkId(linkId);
         chatFriendListEntity.setSenderId(senderId);
-        chatFriendListEntity.setReceiverId(receiverId);
-
-        int flag = 0; //falg =1 修改己方成功 =2 修改对方成功 =3修改双方成功
-
-        //双向设置己方上线
-        List<ChatFriendListEntity> list = chatFriendListService.selectTwoListByLinkId(chatFriendListEntity);
-        for(ChatFriendListEntity cfle : list) {
-            //好友列表根据senderId查询，所以前端列表senderId都为用户Id
-            if(cfle.getSenderId().equals(chatFriendListEntity.getSenderId())) {
-                //己方的cfle 设置在线，未读归0
-                cfle.setSenderIsOnline(1);
-                if(chatFriendListService.modify(cfle) == 1) {
-                    flag++;
-                } else {
-                    responseEntity.setCode("500");
-                    responseEntity.setMessage("己方list在线状态修改失败");
-                    return responseEntity;
-                }
-            } else {
-                //所有得对方的cfle 设置己方在线
-                if(chatFriendListService.modifyOnline(chatFriendListEntity)) {
-                    flag++;
-                } else {
-                    responseEntity.setCode("500");
-                    responseEntity.setMessage("己方list在线状态修改成功，对方list在线状态修改失败");
-                    return responseEntity;
-                }
-
-            }
+        //所有得对方的cfle 设置己方在线
+        if(chatFriendListService.modifyOnline(chatFriendListEntity)) {
+            responseEntity.setCode("200");
+            responseEntity.setMessage("上线成功");
+            return responseEntity;
+        } else {
+            responseEntity.setCode("500");
+            responseEntity.setMessage("上线失败");
+            return responseEntity;
         }
-        responseEntity.setCode("200");
-        responseEntity.setMessage("上线成功");
-        return responseEntity;
     }
 
 
 
     /**
      * 用户下线时调用,修改数据库在线信息
-     * @param linkId
      * @param senderId
-     * @param receiverId
+     *
      */
-    public ResponseEntity userOffline(String linkId, String senderId, String receiverId) {
+    public ResponseEntity userOffline(String senderId) {
         ResponseEntity responseEntity = new ResponseEntity();
         ChatFriendListEntity chatFriendListEntity = new ChatFriendListEntity();
-        chatFriendListEntity.setLinkId(linkId);
         chatFriendListEntity.setSenderId(senderId);
-        chatFriendListEntity.setReceiverId(receiverId);
-
-        int flag = 0;
-        //双向设置己方离线，设置对方latest消息
-        List<ChatFriendListEntity> list = chatFriendListService.selectTwoListByLinkId(chatFriendListEntity);
-        for(ChatFriendListEntity cfle : list) {
-            //好友列表根据senderId查询，所以前端列表senderId都为用户Id
-            if(cfle.getSenderId().equals(chatFriendListEntity.getSenderId())) {
-                //己方的cfle 设置离线
-                cfle.setSenderIsOnline(0);
-                if(chatFriendListService.modify(cfle) == 1) {
-                    flag++;
-                } else {
-                    responseEntity.setCode("500");
-                    responseEntity.setMessage("己方list离线状态修改失败");
-                    //响应客户端
-                    return responseEntity;
-                }
-            } else {
-                //列表中所有对方的cfle 设置己方在线
-                if(chatFriendListService.modifyOffline(chatFriendListEntity)) {
-                    flag++;
-                } else {
-                    responseEntity.setCode("500");
-                    responseEntity.setMessage("己方list离线状态修改成功，对方list离线状态修改失败");
-                    //响应客户端
-                    return responseEntity;
-                }
-
-            }
+        if(chatFriendListService.modifyOffline(chatFriendListEntity)) {
+            responseEntity.setCode("200");
+            responseEntity.setMessage("离线成功");
+            //响应客户端
+            return responseEntity;
+        } else {
+            responseEntity.setCode("500");
+            responseEntity.setMessage("离线失败");
+            //响应客户端
+            return responseEntity;
         }
 
-
-        responseEntity.setCode("200");
-        responseEntity.setMessage("离线成功");
-        //响应客户端
-        return responseEntity;
     }
 
     /**

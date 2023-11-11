@@ -6,7 +6,7 @@ mybatis:
   mapperLocations: classpath:mapper/*.xml
   configuration:
     cache-enabled: true
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 控制台输出日志
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 控制台输出日志
 
 spring:
   datasource:

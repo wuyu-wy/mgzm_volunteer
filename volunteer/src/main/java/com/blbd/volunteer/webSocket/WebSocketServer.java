@@ -34,6 +34,7 @@ public class WebSocketServer {
      */
     private static ChatMsgService chatMsgService;
     private static ChatFriendListService chatFriendListService;
+    private static WebSocketUtils webSocketUtils;
     @Autowired
     public void setChatFriendListService(ChatFriendListService chatFriendListService) {
         WebSocketServer.chatFriendListService = chatFriendListService;
@@ -41,6 +42,10 @@ public class WebSocketServer {
     @Autowired
     public void setChatMsgService(ChatMsgService chatMsgService) {
         WebSocketServer.chatMsgService = chatMsgService;
+    }
+    @Autowired
+    public void setWebSocketUtils(WebSocketUtils webSocketUtils) {
+        WebSocketServer.webSocketUtils = webSocketUtils;
     }
 
     private static Logger log = LoggerFactory.getLogger(WebSocketServer.class);
@@ -74,16 +79,7 @@ public class WebSocketServer {
             addOnlineCount();
         }
         log.info("用户连接: "+userId+",当前在线人数为: " + getOnlineCount());
-        try {
-            ChatMsgEntity chatMsgEntity = new ChatMsgEntity();
-            chatMsgEntity.setSenderId("SERVER");
-            chatMsgEntity.setReceiverId(userId);
-            chatMsgEntity.setMsgBody("连接成功");
-            webSocketMap.get(userId).sendMessage(JSON.toJSONString(chatMsgEntity));
-            sendMessage(JSON.toJSONString(chatMsgEntity));
-        } catch (IOException e) {
-            log.error("用户: "+userId+",网络异常!!!!!!");
-        }
+        sendServerMessage("连接成功");
     }
 
     /**
@@ -155,7 +151,6 @@ public class WebSocketServer {
 
     }
 
-
     /**
      * 链接异常时执行
      * @param session
@@ -170,7 +165,6 @@ public class WebSocketServer {
     /**
      * 处理信息
      */
-
     public void handleMessage(Session session, TextMessage message) throws Exception {
         log.warn("=========== Received message: {}", message.getPayload());
 
@@ -182,18 +176,18 @@ public class WebSocketServer {
         //根据消息类型分别处理
         if (chatMsgEntity.getMsgType() == SocketConstants.MsgType.HEART_BEAT) {
             // 心跳消息
-            chatMsgEntity.setSenderId("SERVER");
-            chatMsgEntity.setReceiverId(userId);
-            chatMsgEntity.setMsgBody("pong");
-            webSocketMap.get(userId).sendMessage(JSON.toJSONString(chatMsgEntity));
-
+            sendServerMessage("pong");
         } else if (chatMsgEntity.getMsgType() == SocketConstants.MsgType.ONLINE) {
             log.info("登录消息，用户:" + chatMsgEntity.getSenderId() + "上线");
-            userOnline(chatMsgEntity.getLinkId(), chatMsgEntity.getSenderId(), chatMsgEntity.getReceiverId());
+            //调用工具类中用户上线方法
+            ResponseEntity responseEntity = webSocketUtils.userOnline(chatMsgEntity.getLinkId(), chatMsgEntity.getSenderId(), chatMsgEntity.getReceiverId());
+            sendServerMessage(JSON.toJSONString(responseEntity));
 
         } else if (chatMsgEntity.getMsgType() == SocketConstants.MsgType.OFFLINE) {
             log.info("离线消息，用户:" + chatMsgEntity.getSenderId() + "离线");
-            userOffline(chatMsgEntity.getLinkId(), chatMsgEntity.getSenderId(), chatMsgEntity.getReceiverId());
+            //调用工具类中用户离线方法
+            ResponseEntity responseEntity = webSocketUtils.userOffline(chatMsgEntity.getLinkId(), chatMsgEntity.getSenderId(), chatMsgEntity.getReceiverId());
+            sendServerMessage(JSON.toJSONString(responseEntity));
 
         } else if (chatMsgEntity.getMsgType() == SocketConstants.MsgType.TEXT_MESSAGE) {
             /**
@@ -204,7 +198,8 @@ public class WebSocketServer {
             /**
              * 再将消息保存到数据库
              */
-            saveMsg(chatMsgEntity);
+            ResponseEntity responseEntity = webSocketUtils.saveMsg(chatMsgEntity);
+            sendServerMessage(JSON.toJSONString(responseEntity));
 
         } else if (chatMsgEntity.getMsgType() == SocketConstants.MsgType.IMAGE) {
             /**
@@ -212,7 +207,8 @@ public class WebSocketServer {
              * 将消息以JSON格式传输给收方
              */
             sendOneMessage( chatMsgEntity.getSenderId(), JSON.toJSONString(chatMsgEntity), chatMsgEntity.getReceiverId());
-            saveMsg(chatMsgEntity);
+            ResponseEntity responseEntity = webSocketUtils.saveMsg(chatMsgEntity);
+            sendServerMessage(JSON.toJSONString(responseEntity));
 
         } else if (chatMsgEntity.getMsgType() == SocketConstants.MsgType.FILE) {
             /**
@@ -220,8 +216,8 @@ public class WebSocketServer {
              * 将消息以JSON格式传输给收方
              */
             sendOneMessage( chatMsgEntity.getSenderId(), JSON.toJSONString(chatMsgEntity), chatMsgEntity.getReceiverId());
-            saveMsg(chatMsgEntity);
-
+            ResponseEntity responseEntity = webSocketUtils.saveMsg(chatMsgEntity);
+            sendServerMessage(JSON.toJSONString(responseEntity));
 
         } else if (chatMsgEntity.getMsgType() == SocketConstants.MsgType.VOICE) {
             /**
@@ -229,12 +225,13 @@ public class WebSocketServer {
              * 将消息以JSON格式传输给收方
              */
             sendOneMessage( chatMsgEntity.getSenderId(), JSON.toJSONString(chatMsgEntity), chatMsgEntity.getReceiverId());
-            saveMsg(chatMsgEntity);
+            ResponseEntity responseEntity = webSocketUtils.saveMsg(chatMsgEntity);
+            sendServerMessage(JSON.toJSONString(responseEntity));
+
         } else {
             log.error("消息类型错误");
         }
     }
-
 
     /**
      * 实现服务器主动推送
@@ -245,8 +242,8 @@ public class WebSocketServer {
         this.session.getBasicRemote().sendText(message);//同步消息
 //        this.session.getAsyncRemote().sendText(message);//异步消息
     }
-    // --------------------以下三种主动发送消息方法---------------------
-    // --------------------通过注入WebSocketServer类使用---------------------
+
+    // --------------------主动发送消息方法---------------------
     /**
      * 单体消息
      * */
@@ -258,28 +255,24 @@ public class WebSocketServer {
             log.error("用户: "+receiverId+",不在线！");
         }
     }
-//    /**
-//     * 多人消息
-//     * */
-//    public void sendMoreMessage(String message, String[] userIds) throws IOException {
-//        log.info("多人消息报文: "+message);
-//        for (String id : userIds) {
-//            if(webSocketMap.containsKey(id)){
-//                webSocketMap.get(id).sendMessage(message);
-//            }else{
-//                log.error("用户: "+id+",不在线！");
-//            }
-//        }
-//    }
-//    /**
-//     * 广播消息
-//     * */
-//    public void sendAllMessage(String message) throws IOException {
-//        log.info("广播消息报文: "+message);
-//        for (Map.Entry<String,WebSocketServer> entry : webSocketMap.entrySet()){
-//            entry.getValue().sendMessage(message);
-//        }
-//    }
+    /**
+     * 发送服务器消息
+     */
+    public void sendServerMessage(String message) {
+        ChatMsgEntity chatMsgEntity = new ChatMsgEntity();
+        chatMsgEntity.setSenderId("SERVER");
+        chatMsgEntity.setReceiverId(userId);
+        chatMsgEntity.setMsgBody(message);
+        try {
+            webSocketMap.get(userId).sendMessage(JSON.toJSONString(chatMsgEntity));
+        } catch (IOException e) {
+            log.error("用户: "+userId+",网络异常!!!!!!");
+            log.error(e.getMessage());
+            throw new RuntimeException(e);
+        }
+
+    }
+
 
     /**
      * 获取当前在线人数
@@ -303,164 +296,28 @@ public class WebSocketServer {
         WebSocketServer.onlineCount--;
     }
 
+//    /**
+//     * 多人消息
+//     * */
+//    public void sendMoreMessage(String message, String[] userIds) throws IOException {
+//        log.info("多人消息报文: "+message);
+//        for (String id : userIds) {
+//            if(webSocketMap.containsKey(id)){
+//                webSocketMap.get(id).sendMessage(message);
+//            }else{
+//                log.error("用户: "+id+",不在线！");
+//            }
+//        }
+//    }
+//    /**
+//     * 广播消息
+//     * */
+//    public void sendAllMessage(String message) throws IOException {
+//        log.info("广播消息报文: "+message);
+//        for (Map.Entry<String,WebSocketServer> entry : webSocketMap.entrySet()){
+//            entry.getValue().sendMessage(message);
+//        }
+//    }
 
-    /**
-     * 用户上线时调用，修改数据库在线信息，清空未读信息
-     * @param linkId
-     * @param senderId
-     * @param receiverId
-     */
-    public void userOnline(String linkId, String senderId, String receiverId) {
-        ResponseEntity responseEntity = new ResponseEntity();
-        ChatFriendListEntity chatFriendListEntity = new ChatFriendListEntity();
-        chatFriendListEntity.setLinkId(linkId);
-        chatFriendListEntity.setSenderId(senderId);
-        chatFriendListEntity.setReceiverId(receiverId);
-
-        int flag = 0; //falg =1 修改己方成功 =2 修改对方成功 =3修改双方成功
-
-        //双向设置己方上线
-        List<ChatFriendListEntity> list = chatFriendListService.selectTwoListByLinkId(chatFriendListEntity);
-        for(ChatFriendListEntity cfle : list) {
-            //好友列表根据senderId查询，所以前端列表senderId都为用户Id
-            if(cfle.getSenderId().equals(chatFriendListEntity.getSenderId())) {
-                //己方的cfle 设置在线，未读归0
-                cfle.setSenderIsOnline(1);
-                if(chatFriendListService.modify(cfle) == 1) {
-                    flag++;
-                } else {
-                    responseEntity.setCode("500");
-                    responseEntity.setMessage("己方list在线状态修改失败");
-                    try {
-                        webSocketMap.get(userId).sendMessage(JSON.toJSONString(responseEntity));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            } else {
-                //所有得对方的cfle 设置己方在线
-                if(chatFriendListService.modifyOnline(chatFriendListEntity)) {
-                    flag++;
-                } else {
-                    responseEntity.setCode("500");
-                    responseEntity.setMessage("己方list在线状态修改成功，对方list在线状态修改失败");
-                    try {
-                        webSocketMap.get(userId).sendMessage(JSON.toJSONString(responseEntity));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
-            }
-        }
-        responseEntity.setCode("200");
-        responseEntity.setMessage("上线成功");
-        try {
-            webSocketMap.get(userId).sendMessage(JSON.toJSONString(responseEntity));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-
-
-    /**
-     * 用户下线时调用,修改数据库在线信息
-     * @param linkId
-     * @param senderId
-     * @param receiverId
-     */
-    public void userOffline(String linkId, String senderId, String receiverId) {
-        ResponseEntity responseEntity = new ResponseEntity();
-        ChatFriendListEntity chatFriendListEntity = new ChatFriendListEntity();
-        chatFriendListEntity.setLinkId(linkId);
-        chatFriendListEntity.setSenderId(senderId);
-        chatFriendListEntity.setReceiverId(receiverId);
-
-        int flag = 0;
-        //双向设置己方离线，设置对方latest消息
-        List<ChatFriendListEntity> list = chatFriendListService.selectTwoListByLinkId(chatFriendListEntity);
-        for(ChatFriendListEntity cfle : list) {
-            //好友列表根据senderId查询，所以前端列表senderId都为用户Id
-            if(cfle.getSenderId().equals(chatFriendListEntity.getSenderId())) {
-                //己方的cfle 设置离线
-                cfle.setSenderIsOnline(0);
-                if(chatFriendListService.modify(cfle) == 1) {
-                    flag++;
-                } else {
-                    responseEntity.setCode("500");
-                    responseEntity.setMessage("己方list离线状态修改失败");
-                    //响应客户端
-                    try {
-                        webSocketMap.get(userId).sendMessage(JSON.toJSONString(responseEntity));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            } else {
-                //列表中所有对方的cfle 设置己方在线
-                if(chatFriendListService.modifyOffline(chatFriendListEntity)) {
-                    flag++;
-                } else {
-                    responseEntity.setCode("500");
-                    responseEntity.setMessage("己方list离线状态修改成功，对方list离线状态修改失败");
-                    //响应客户端
-                    try {
-                        webSocketMap.get(userId).sendMessage(JSON.toJSONString(responseEntity));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
-            }
-        }
-
-
-        responseEntity.setCode("200");
-        responseEntity.setMessage("离线成功");
-        //响应客户端
-        try {
-            webSocketMap.get(userId).sendMessage(JSON.toJSONString(responseEntity));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * 发送消息后将消息保存到数据库
-     * @param chatMsgEntity
-     */
-    public void saveMsg(ChatMsgEntity chatMsgEntity) {
-        ResponseEntity responseEntity = new ResponseEntity();
-
-        //查询在线状况
-        ChatFriendListEntity chatFriendListEntity = new ChatFriendListEntity();
-        chatFriendListEntity.setLinkId(chatMsgEntity.getLinkId());
-        List<ChatFriendListEntity> cfleList = chatFriendListService.selectTwoListByLinkId(chatFriendListEntity);
-
-
-        if(chatMsgService.saveMessage(chatMsgEntity) == 1) {
-            //若对方不在线 对方unread+1 加的是对方是sender的那项的unread ，若对方在线则不改
-            for(ChatFriendListEntity c : cfleList) {
-                if(c.getSenderId().equals(chatMsgEntity.getReceiverId())) {
-                    if(c.getSenderIsOnline() == 0) {
-                        c.setUnread(c.getUnread() + 1);
-                        chatFriendListService.modify(c);
-                    }
-                }
-            }
-            responseEntity.setCode("200");
-            responseEntity.setMessage("消息保存成功");
-        } else {
-            responseEntity.setCode("500");
-            responseEntity.setMessage("消息保存失败");
-        }
-        //响应客户端
-        try {
-            webSocketMap.get(userId).sendMessage(JSON.toJSONString(responseEntity));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }
 

@@ -16,6 +16,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+
+
+/**
+ * ChatMsgController
+ * 用于处理用户聊天消息的增删改查
+ *
+ * @module mgzm_volunteer
+ */
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/ChatMsg")

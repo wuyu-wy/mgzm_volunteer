@@ -93,7 +93,7 @@ public class ChatFriendController {
 
 
     /**
-     * 点击好友列表中某一个好友打开聊天框时调用，双向设置己方上线
+     * 设置用户上线
      * @param chatFriendListEntity
      * @return HttpResponseEntity
      */
@@ -118,9 +118,8 @@ public class ChatFriendController {
                     return httpResponseEntity;
                 }
             } else {
-                //对方的cfle 设置己方在线
-                cfle.setReceiverIsOnline(1);
-                if(chatFriendListService.modify(cfle) == 1) {
+                //所有其他的cfle 设置己方在线
+                if(chatFriendListService.modifyOnline(chatFriendListEntity)) {
                     flag++;
                 } else {
                     httpResponseEntity.setCode("500");
@@ -131,8 +130,6 @@ public class ChatFriendController {
             }
         }
 
-        //设置其他关系中自己上线
-        chatFriendListService.modifyOnline(chatFriendListEntity);
 
         httpResponseEntity.setCode("200");
         httpResponseEntity.setMessage("上线成功");
@@ -140,7 +137,7 @@ public class ChatFriendController {
     }
 
     /**
-     * 离开好友聊天框时调用，双向设置己方离线
+     * 置己方离线
      * @param chatFriendListEntity
      * @return
      */
@@ -164,9 +161,8 @@ public class ChatFriendController {
                     return httpResponseEntity;
                 }
             } else {
-                //对方的cfle 设置己方在线
-                cfle.setReceiverIsOnline(0);
-                if(chatFriendListService.modify(cfle) == 1) {
+                //设置其他关系中自己离线
+                if( chatFriendListService.modifyOffline(chatFriendListEntity)) {
                     flag++;
                 } else {
                     httpResponseEntity.setCode("500");
@@ -176,11 +172,6 @@ public class ChatFriendController {
 
             }
         }
-
-        //设置其他关系中自己离线
-        chatFriendListService.modifyOffline(chatFriendListEntity);
-
-
         httpResponseEntity.setCode("200");
         httpResponseEntity.setMessage("离线成功");
         return httpResponseEntity;

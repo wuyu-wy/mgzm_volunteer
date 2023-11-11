@@ -7,16 +7,11 @@ import com.blbd.volunteer.service.ChatMsgService;
 import com.blbd.volunteer.utils.HttpResponseEntity;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.github.pagehelper.page.PageMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-
 
 /**
  * ChatMsgController

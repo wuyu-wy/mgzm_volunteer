@@ -1,5 +1,9 @@
 server:
   port: 8085
+  tomcat:
+    connection-timeout: 60000
+    keep-alive-timeout: 60000
+
 
 mybatis:
   typeAliasesPackage: com.blbd.volunteer.dao.entity

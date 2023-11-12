@@ -78,6 +78,7 @@ public class WebSocketServer {
             //在线数加1
             addOnlineCount();
         }
+        webSocketUtils.userOnline(userId);
         log.info("用户连接: "+userId+",当前在线人数为: " + getOnlineCount());
         sendServerMessage("连接成功");
     }
